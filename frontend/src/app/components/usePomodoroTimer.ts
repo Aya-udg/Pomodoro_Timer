@@ -1,0 +1,85 @@
+import { useTimer } from "react-timer-hook";
+import { useEffect, useState } from "react";
+
+
+
+interface MyTimerProps {
+  workTime: number;
+  breakTime: number;
+  longBreakTime: number;
+}
+
+export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTimerProps) =>{
+  const [sessionCount, setSessionCount] = useState(0); // 4回でロング休憩
+  const [timerType, setTimerType] = useState<'timer'|'break'|'longbreak'>("timer"); //タイマーの状態
+  const [isReady, setIsReady] = useState(false); // 初期化フラグ
+
+  const getExpiryTime = (seconds: number) => {
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + seconds); 
+    return time;
+  };
+
+  const {
+    seconds,
+    minutes,
+    isRunning,
+    start,
+    pause,
+    resume,
+    restart,
+  } = useTimer({
+    expiryTimestamp: getExpiryTime(workTime),
+    autoStart: false,
+    onExpire: () => endTimer(),
+    interval: 1000,
+  });
+
+  // タイマーの初期表示をデータベースの値にする
+  useEffect(() => {
+    restart(getExpiryTime(workTime), false);
+    setIsReady(true);
+  }, [workTime]);
+
+  // タイマー終了時の処理
+  const endTimer = () => {
+    console.log("現在のタイマータイプ:", timerType);
+    console.log("セッションカウント:", sessionCount);
+
+    if (timerType === "timer") {
+      let newCount = sessionCount + 1;
+      setSessionCount(newCount);
+
+      if (newCount % 4 === 0) {
+        setTimerType("longbreak");
+        restart(getExpiryTime(longBreakTime), false);
+        console.log("ロング休憩に切り替えました");
+      } else {
+        setTimerType("break");
+        restart(getExpiryTime(breakTime), false);
+        console.log("休憩に切り替えました");
+      }
+    } else {
+      // 休憩が終わったら、通常のタイマーに戻す
+      restart(getExpiryTime(workTime), false);
+      setTimerType("timer");
+      console.log("通常のタイマーに戻しました");
+    }
+  };
+
+  return{
+      seconds,
+      minutes,
+      isRunning,
+      start,
+      pause,
+      resume,
+      restart:()=>{
+          setSessionCount(0);
+          setTimerType("timer");
+          restart(getExpiryTime(workTime), false);
+    },
+  };
+};
+
+  
