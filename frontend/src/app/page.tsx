@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import { fetchTimerSettings } from "@/app/lib/fetchTimerSettings";
 import { TimerDisplay } from "@/app/components/TimerDisplay";
 import { usePomodoroTimer } from "@/app/components/usePomodoroTimer";
+import { Header } from "./components/Header";
+import Link from "next/link";
+import { Slider } from "@/app/components/ui/slider";
 
 export default function app() {
   // 初期値
@@ -27,5 +30,13 @@ export default function app() {
     longBreakTime: timerSettings.LONG_BREAK_TIME,
   });
 
-  return <TimerDisplay {...timer} />;
+  return (
+    <>
+      <Header />
+      <TimerDisplay {...timer} />
+
+      <Slider defaultValue={[33]} max={100} step={1} />
+      <Link href={"/timerform"}>時間変更はこちら</Link>
+    </>
+  );
 }
