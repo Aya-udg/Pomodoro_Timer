@@ -33,9 +33,22 @@ export default function app() {
   return (
     <>
       <Header />
-      <TimerDisplay {...timer} />
 
-      <Slider defaultValue={[33]} max={100} step={1} />
+      <TimerDisplay {...timer} />
+      <div className="w-96 flex justify-center items-center">
+        <label className="block mb-2 text-sm font-medium">
+          作業時間：{timerSettings.WORK_TIME / 60}分
+        </label>
+        <Slider
+          value={[timerSettings.WORK_TIME / 60]}
+          defaultValue={[timerSettings.WORK_TIME / 60]}
+          onValueChange={(v) =>
+            setTimerSettings({ ...timerSettings, WORK_TIME: v * 60 })
+          }
+          max={100}
+          step={5}
+        />
+      </div>
       <Link href={"/timerform"}>時間変更はこちら</Link>
     </>
   );
