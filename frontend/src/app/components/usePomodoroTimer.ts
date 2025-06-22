@@ -1,15 +1,8 @@
 import { useTimer } from "react-timer-hook";
 import { useEffect, useState } from "react";
+import { MyTimer } from "@/app/types/index";
 
-
-
-interface MyTimerProps {
-  workTime: number;
-  breakTime: number;
-  longBreakTime: number;
-}
-
-export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTimerProps) =>{
+export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTimer) =>{
   const [sessionCount, setSessionCount] = useState(0); // 4回でロング休憩
   const [timerType, setTimerType] = useState<'timer'|'break'|'longbreak'>("timer"); //タイマーの状態
   const [isReady, setIsReady] = useState(false); // 初期化フラグ

@@ -1,6 +1,6 @@
 import React from "react";
 
-interface Props {
+type Props = {
   minutes: number;
   seconds: number;
   isRunning: boolean;
@@ -8,7 +8,7 @@ interface Props {
   pause: () => void;
   resume: () => void;
   restart: () => void;
-}
+};
 
 export const TimerDisplay = ({
   minutes,
