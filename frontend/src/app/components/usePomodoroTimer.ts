@@ -5,7 +5,6 @@ import { MyTimer } from "@/app/types/index";
 export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTimer) =>{
   const [sessionCount, setSessionCount] = useState(0); // 4回でロング休憩
   const [timerType, setTimerType] = useState<'timer'|'break'|'longbreak'>("timer"); //タイマーの状態
-  const [isReady, setIsReady] = useState(false); // 初期化フラグ
 
   const getExpiryTime = (seconds: number) => {
     const time = new Date();
@@ -30,9 +29,12 @@ export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTime
 
   // タイマーの初期表示をデータベースの値にする
   useEffect(() => {
-    restart(getExpiryTime(workTime), false);
-    setIsReady(true);
-  }, [workTime]);
+    let time;
+    if (timerType === "timer") time = workTime;
+    else if (timerType === "break") time = breakTime;
+    else time = longBreakTime;
+    restart(getExpiryTime(time), false);
+  }, [workTime,breakTime,longBreakTime]);
 
   // タイマー終了時の処理
   const endTimer = () => {
