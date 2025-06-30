@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { fetchTimerSettings } from "@/app/lib/fetchTimerSettings";
 import { TimerDisplay } from "@/app/components/TimerDisplay";
+import { BoopButton } from "@/app/components/sound";
 import { usePomodoroTimer } from "@/app/components/usePomodoroTimer";
 import { Header } from "./components/Header";
 import { MyTimer } from "@/app/types/index";
 import TimerSlider from "./components/TimerSlider";
 import SimpleLineChart from "./components/SimapleLineChart";
+
 import dynamic from "next/dynamic";
 
 const DEFAULT_TIMER: MyTimer = {
@@ -52,6 +54,7 @@ export default function app() {
         タイマー設定をリセットする
       </button>
       <DynamicSimpleLineCharts />
+      <BoopButton></BoopButton>
     </>
   );
 }
