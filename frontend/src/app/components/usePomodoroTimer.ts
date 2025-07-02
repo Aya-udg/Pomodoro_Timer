@@ -2,7 +2,7 @@ import { useTimer } from "react-timer-hook";
 import { useEffect, useState } from "react";
 import { MyTimer } from "@/app/types/index";
 
-export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTimer) =>{
+export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTimer,onExpire?: () => void) =>{
   const [sessionCount, setSessionCount] = useState(0); // 4回でロング休憩
   const [timerType, setTimerType] = useState<'timer'|'break'|'longbreak'>("timer"); //タイマーの状態
 
@@ -23,7 +23,10 @@ export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTime
   } = useTimer({
     expiryTimestamp: getExpiryTime(workTime),
     autoStart: false,
-    onExpire: () => endTimer(),
+     onExpire: () => {
+    endTimer();
+    onExpire?.();
+  },
     interval: 1000,
   });
 
@@ -38,6 +41,7 @@ export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTime
 
   // タイマー終了時の処理
   const endTimer = () => {
+
     console.log("現在のタイマータイプ:", timerType);
     console.log("セッションカウント:", sessionCount);
 

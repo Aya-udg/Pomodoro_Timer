@@ -3,13 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { fetchTimerSettings } from "@/app/lib/fetchTimerSettings";
 import { TimerDisplay } from "@/app/components/TimerDisplay";
-import { BoopButton } from "@/app/components/sound";
 import { usePomodoroTimer } from "@/app/components/usePomodoroTimer";
 import { Header } from "./components/Header";
 import { MyTimer } from "@/app/types/index";
 import TimerSlider from "./components/TimerSlider";
 import SimpleLineChart from "./components/SimapleLineChart";
-
+import { useAlarmSound } from "../app/components/sound";
 import dynamic from "next/dynamic";
 
 const DEFAULT_TIMER: MyTimer = {
@@ -26,6 +25,7 @@ const DynamicSimpleLineCharts = dynamic(
 );
 
 export default function app() {
+  const playAlarm = useAlarmSound();
   // 初期値
   const [timerSettings, setTimerSettings] = useState<MyTimer>(DEFAULT_TIMER);
 
@@ -37,7 +37,9 @@ export default function app() {
     fetchData();
   }, []);
 
-  const timer = usePomodoroTimer(timerSettings);
+  const timer = usePomodoroTimer(timerSettings, () => {
+    playAlarm();
+  });
 
   return (
     <>
@@ -54,7 +56,6 @@ export default function app() {
         タイマー設定をリセットする
       </button>
       <DynamicSimpleLineCharts />
-      <BoopButton></BoopButton>
     </>
   );
 }
