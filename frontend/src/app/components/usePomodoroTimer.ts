@@ -25,7 +25,7 @@ export const usePomodoroTimer =  ({ workTime, breakTime, longBreakTime }: MyTime
     autoStart: false,
      onExpire: () => {
     endTimer();
-    onExpire?.();
+    onExpire?.(); // onExpire が undefined じゃなければ
   },
     interval: 1000,
   });

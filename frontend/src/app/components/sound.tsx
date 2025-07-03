@@ -1,8 +1,9 @@
 import useSound from "use-sound";
 
-export const useAlarmSound  = () => {
+export const useAlarmSound = () => {
   // const [play, { stop }] = useSound("/sounds/fanfare.mp3");
-  const [play] = useSound("/sounds/cuckoo_clock.mp3");
+  const [cuckooClockPlay] = useSound("/sounds/cuckoo_clock.mp3");
+  const [fanfarePlay] = useSound("/sounds/cuckoo_clock.mp3");
 
-  return play;
+  return { cuckooClockPlay, fanfarePlay };
 };

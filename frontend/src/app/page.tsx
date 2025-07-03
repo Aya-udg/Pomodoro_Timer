@@ -25,7 +25,7 @@ const DynamicSimpleLineCharts = dynamic(
 );
 
 export default function app() {
-  const playAlarm = useAlarmSound();
+  const { cuckooClockPlay, fanfarePlay } = useAlarmSound();
   // 初期値
   const [timerSettings, setTimerSettings] = useState<MyTimer>(DEFAULT_TIMER);
 
@@ -38,7 +38,7 @@ export default function app() {
   }, []);
 
   const timer = usePomodoroTimer(timerSettings, () => {
-    playAlarm();
+    cuckooClockPlay();
   });
 
   return (
