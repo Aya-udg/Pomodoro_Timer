@@ -37,24 +37,26 @@ export default function app() {
     fetchData();
   }, []);
 
-  const timer = usePomodoroTimer(timerSettings, () => {
-    cuckooClockPlay();
-  });
+  const timer = usePomodoroTimer(timerSettings, cuckooClockPlay, fanfarePlay);
 
   return (
     <>
       <Header />
       <TimerDisplay {...timer} />
-      <TimerSlider
-        timerSettings={timerSettings}
-        setTimerSettings={setTimerSettings}
-      />
-      <button
-        className="btn-base btn-red"
-        onClick={() => setTimerSettings(DEFAULT_TIMER)}
-      >
-        タイマー設定をリセットする
-      </button>
+      {/* プルダウンメニューを作る */}
+
+      <select name="" id="">
+        <TimerSlider
+          timerSettings={timerSettings}
+          setTimerSettings={setTimerSettings}
+        />
+        <button
+          className="btn-base btn-red"
+          onClick={() => setTimerSettings(DEFAULT_TIMER)}
+        >
+          タイマー設定をリセットする
+        </button>
+      </select>
       <DynamicSimpleLineCharts />
     </>
   );
