@@ -13,7 +13,7 @@ export default function TimerSlider({
 }: Props) {
   return (
     <>
-      <div className="w-96 flex justify-center items-center">
+      <div className="w-96 flex justify-center items-center mb-5">
         <label className="block mb-2 text-sm font-medium">
           作業時間：{timerSettings.workTime / 60}分
         </label>
@@ -27,7 +27,7 @@ export default function TimerSlider({
           step={5}
         />
       </div>
-      <div className="w-96 flex justify-center items-center">
+      <div className="w-96 flex justify-center items-center mb-5">
         <label className="block mb-2 text-sm font-medium">
           休憩時間：{timerSettings.breakTime / 60}分
         </label>
@@ -41,7 +41,7 @@ export default function TimerSlider({
           step={1}
         />
       </div>
-      <div className="w-96 flex justify-center items-center">
+      <div className="w-96 flex justify-center items-center mb-5">
         <label className="block mb-2 text-sm font-medium">
           長い休憩時間：{timerSettings.longBreakTime / 60}分
         </label>

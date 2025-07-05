@@ -1,28 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchTimerSettings } from "@/app/lib/fetchTimerSettings";
 import { TimerDisplay } from "@/app/components/TimerDisplay";
 import { usePomodoroTimer } from "@/app/components/usePomodoroTimer";
-import { Header } from "./components/Header";
 import { MyTimer } from "@/app/types/index";
 import TimerSlider from "./components/TimerSlider";
-import SimpleLineChart from "./components/SimapleLineChart";
 import { useAlarmSound } from "../app/components/sound";
-import dynamic from "next/dynamic";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
 
 const DEFAULT_TIMER: MyTimer = {
   workTime: 1500,
   breakTime: 300,
   longBreakTime: 900,
 };
-
-const DynamicSimpleLineCharts = dynamic(
-  () => import("@/app/components/SimapleLineChart"),
-  {
-    ssr: false,
-  }
-);
 
 export default function app() {
   const { cuckooClockPlay, fanfarePlay } = useAlarmSound();
@@ -41,23 +36,29 @@ export default function app() {
 
   return (
     <>
-      <Header />
       <TimerDisplay {...timer} />
-      {/* プルダウンメニューを作る */}
-
-      <select name="" id="">
-        <TimerSlider
-          timerSettings={timerSettings}
-          setTimerSettings={setTimerSettings}
-        />
-        <button
-          className="btn-base btn-red"
-          onClick={() => setTimerSettings(DEFAULT_TIMER)}
-        >
-          タイマー設定をリセットする
-        </button>
-      </select>
-      <DynamicSimpleLineCharts />
+      <div className="mt-10 flex justify-center">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="py-2 px-5 bg-sky-500 transition hover:bg-sky-600 rounded-2xl text-white font-black">
+            タイマー設定
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="p-5">
+            <TimerSlider
+              timerSettings={timerSettings}
+              setTimerSettings={setTimerSettings}
+            />
+            <div className="mt-5 flex justify-center">
+              <button
+                className="inline-flex h-10 items-center justify-center rounded-md px-5 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 btn-red"
+                onClick={() => setTimerSettings(DEFAULT_TIMER)}
+              >
+                タイマー設定をリセットする
+              </button>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      {/* <DynamicSimpleLineCharts /> */}
     </>
   );
 }

@@ -18,7 +18,7 @@ export const usePomodoroTimer = (
     return time;
   };
 
-  const { seconds, minutes, isRunning, start, pause, resume, restart } =
+  const { seconds, minutes, isRunning, pause, resume, restart } =
     useTimer({
       expiryTimestamp: getExpiryTime(workTime),
       autoStart: false,
@@ -70,7 +70,6 @@ export const usePomodoroTimer = (
     seconds,
     minutes,
     isRunning,
-    start,
     pause,
     resume,
     restart: () => {
