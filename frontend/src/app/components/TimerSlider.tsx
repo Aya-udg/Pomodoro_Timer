@@ -15,7 +15,8 @@ export default function TimerSlider({
     <>
       <div className="w-96 flex justify-center items-center mb-5">
         <label className="block mb-2 text-sm font-medium">
-          作業時間：{timerSettings.workTime / 60}分
+          作業時間：
+          {timerSettings.workTime / 60}分
         </label>
         <Slider
           value={[timerSettings.workTime / 60]}
@@ -23,7 +24,7 @@ export default function TimerSlider({
           onValueChange={(v) =>
             setTimerSettings({ ...timerSettings, workTime: v[0] * 60 })
           }
-          max={100}
+          max={60}
           step={5}
         />
       </div>
@@ -37,7 +38,7 @@ export default function TimerSlider({
           onValueChange={(v) =>
             setTimerSettings({ ...timerSettings, breakTime: v[0] * 60 })
           }
-          max={100}
+          max={30}
           step={1}
         />
       </div>
@@ -51,7 +52,7 @@ export default function TimerSlider({
           onValueChange={(v) => {
             setTimerSettings({ ...timerSettings, longBreakTime: v[0] * 60 });
           }}
-          max={100}
+          max={60}
           step={1}
         />
       </div>
