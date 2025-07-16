@@ -1,8 +1,10 @@
-# def main():
-#     print("Hello from backend!")
+from fastapi import FastAPI
+from sqlmodel import Field,SQLModel,Session,select
+
+app = FastAPI()
 
 
-# if __name__ == "__main__":
-#     main()
-
-
+# データ取得
+@app.get('/timer/')
+def read_timer_settings():
+    with Session
