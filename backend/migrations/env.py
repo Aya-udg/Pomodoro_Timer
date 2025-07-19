@@ -7,7 +7,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from db import Timer
+from Pomodoro_Timer.backend.models import Timer
 
 load_dotenv(dotenv_path="../.env")
 database_url = os.getenv("POSTGRES_URL")

@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
+from typing import Optional
 
 
 class Timer(SQLModel, table=True):
@@ -14,3 +15,6 @@ class StudyHistory(SQLModel, table=True):
     date: datetime = Field(nullable=False)
     startTime: int = Field(nullable=False)
     endTime: int = Field(nullable=False)
+    duration: int
+    memo: Optional[str]
+    tag: Optional[str]
