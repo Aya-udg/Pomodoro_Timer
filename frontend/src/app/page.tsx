@@ -12,6 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
+import Link from "next/link";
 
 const DEFAULT_TIMER: MyTimer = {
   workTime: 1500,
@@ -58,7 +59,7 @@ export default function app() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {/* <DynamicSimpleLineCharts /> */}
+      <Link href="/graph">graphへ</Link>
     </>
   );
 }
