@@ -12,9 +12,7 @@ class Timer(SQLModel, table=True):
 
 class StudyHistory(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    date: datetime = Field(nullable=False)
-    startTime: int = Field(nullable=False)
-    endTime: int = Field(nullable=False)
-    duration: int
+    date: str = Field(nullable=False)
+    duration: int = Field(nullable=False)
     memo: Optional[str]
     tag: Optional[str]

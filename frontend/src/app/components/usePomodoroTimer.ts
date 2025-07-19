@@ -1,6 +1,8 @@
 import { useTimer } from "react-timer-hook";
 import { useEffect, useState } from "react";
 import { MyTimer } from "@/app/types/index";
+import { StudyHistory } from "@/app/types/index";
+import getStudyHistory from "../lib/getStudyHistory";
 
 export const usePomodoroTimer = (
   { workTime, breakTime, longBreakTime }: MyTimer,
@@ -18,7 +20,11 @@ export const usePomodoroTimer = (
     return time;
   };
 
-  const {hours, seconds, minutes, isRunning, pause, resume, restart } =
+  // 登録日
+  const now = new Date();
+  const date = now.toLocaleDateString();
+
+  const { hours, seconds, minutes, isRunning, pause, resume, restart } =
     useTimer({
       expiryTimestamp: getExpiryTime(workTime),
       autoStart: false,
@@ -39,15 +45,19 @@ export const usePomodoroTimer = (
   }, [workTime, breakTime, longBreakTime]);
 
   // タイマー終了時の処理
-  const  endTimer = async() => {
-    console.log("現在のタイマータイプ:", timerType);
+  const endTimer = async () => {
+    const posdate: StudyHistory = {
+      date: date,
+      duration: workTime,
+    };
+    console.log("現在のタイマータイプ:", timerType,posdate);
     console.log("セッションカウント:", sessionCount);
 
     if (timerType === "timer") {
       fanfarePlay();
       let newCount = sessionCount + 1;
       setSessionCount(newCount);
-      const data = await fetch('https://api.vercel.app/blog')
+      getStudyHistory(posdate);
 
       if (newCount % 4 === 0) {
         setTimerType("longbreak");

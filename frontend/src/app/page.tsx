@@ -25,13 +25,13 @@ export default function app() {
   // 初期値
   const [timerSettings, setTimerSettings] = useState<MyTimer>(DEFAULT_TIMER);
 
-  const fetchData = async () => {
-    const data = await fetchTimerSettings();
-    setTimerSettings(data);
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // const fetchData = async () => {
+  //   const data = await fetchTimerSettings();
+  //   setTimerSettings(data);
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const timer = usePomodoroTimer(timerSettings, cuckooClockPlay, fanfarePlay);
 
