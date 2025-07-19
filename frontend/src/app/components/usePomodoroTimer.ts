@@ -39,7 +39,7 @@ export const usePomodoroTimer = (
   }, [workTime, breakTime, longBreakTime]);
 
   // タイマー終了時の処理
-  const endTimer = () => {
+  const  endTimer = async() => {
     console.log("現在のタイマータイプ:", timerType);
     console.log("セッションカウント:", sessionCount);
 
@@ -47,6 +47,7 @@ export const usePomodoroTimer = (
       fanfarePlay();
       let newCount = sessionCount + 1;
       setSessionCount(newCount);
+      const data = await fetch('https://api.vercel.app/blog')
 
       if (newCount % 4 === 0) {
         setTimerType("longbreak");
