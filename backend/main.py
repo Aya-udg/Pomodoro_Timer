@@ -40,9 +40,9 @@ def read_timer_settings(session: Session = Depends(get_session)):
     return results
 
 
-# 勉強データの取得
-@app.get("/studyhistory")
-def read_study_history(session: Session = Depends(get_session)):
+# 同日の勉強データをまとめた勉強データの取得
+@app.get("/studyhistory/summary-by-date")
+def read_study_history_day(session: Session = Depends(get_session)):
     statement = select(
         StudyHistory.date, func.sum(StudyHistory.duration).label("total_minutes")
     ).group_by(StudyHistory.date)
@@ -50,6 +50,18 @@ def read_study_history(session: Session = Depends(get_session)):
     if not results:
         raise HTTPException(status_code="404", detail="勉強履歴がありません")
     return [{"date": row[0], "duration": row[1]} for row in results]
+
+
+# タグごとにまとめた勉強データの取得
+@app.get("/studyhistory/summary-by-tag")
+def read_study_history_tag(session: Session = Depends(get_session)):
+    statement = select(
+        StudyHistory.tag, func.sum(StudyHistory.duration).label("total_minutes")
+    ).group_by(StudyHistory.tag)
+    results = session.exec(statement).all()
+    if not results:
+        raise HTTPException(status_code="404", detail="勉強履歴がありません")
+    return [{"tag": row[0], "duration": row[1]} for row in results]
 
 
 # 勉強データ追加

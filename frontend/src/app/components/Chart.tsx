@@ -8,6 +8,7 @@ import {
   Pie,
   ResponsiveContainer,
   Tooltip,
+  LabelList,
 } from "recharts";
 import { StudyHistory } from "@/app/types/index";
 
@@ -17,30 +18,19 @@ type Props = {
 
 export function SimpleLineChart({ studydata }: Props) {
   const data = studydata.flatMap((v) => {
-    return [
-      { name: v.date, value: v.duration / 60 },
-      { name: "B", value: 200 },
-      { name: "C", value: 300 },
-      { name: "D", value: 350 },
-      { name: "E", value: 300 },
-    ];
+    return [{ name: v.date, 集中時間: v.duration / 60 }];
   });
 
-  const a = [
-    { name: "A", value: 1 },
-    { name: "B", value: 200 },
-    { name: "C", value: 300 },
-    { name: "D", value: 350 },
-    { name: "E", value: 300 },
-  ];
   console.log(studydata);
   return (
     <BarChart width={400} height={400} data={data}>
       <XAxis dataKey="name" />
       <YAxis />
-      <Tooltip />
+      <Tooltip formatter={(value) => `${value} 分`} />
       <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
-      <Bar dataKey="value" stroke="#8884d8" barSize={30} />
+      <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
+        <LabelList position="top" dataKey="集中時間" />
+      </Bar>
     </BarChart>
   );
 }

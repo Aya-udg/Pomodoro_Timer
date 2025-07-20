@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { SimpleLineChart, TwoLevelPieChart } from "@/app/components/Chart";
-import getStudyHistory from "../lib/getStudyHistory";
+import { getStudyHistoryDay } from "../lib/getStudyHistory";
 import { StudyHistory } from "@/app/types/index";
 
 export default function app() {
@@ -9,16 +9,11 @@ export default function app() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const date = await getStudyHistory();
+      const date = await getStudyHistoryDay();
       setstudyHistory(date);
-      console.log(date);
     };
     fetchData();
   }, []);
-
-  const now = new Date();
-  const today = now.toLocaleDateString();
-  console.log(studyHistory);
 
   return (
     <>
