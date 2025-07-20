@@ -3,9 +3,16 @@ import { useEffect, useState } from "react";
 import { SimpleLineChart, TwoLevelPieChart } from "@/app/components/Chart";
 import { getStudyHistoryDay } from "../lib/getStudyHistory";
 import { StudyHistory } from "@/app/types/index";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
 
 export default function app() {
   const [studyHistory, setstudyHistory] = useState<StudyHistory[]>([]);
+  //  選択した日
+  const [choiceDay, setChoiceDay] = useState<Date>(new Date());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,17 +22,24 @@ export default function app() {
     fetchData();
   }, []);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectday = new Date(e.target.value);
+    setChoiceDay(selectday);
+  };
+
   return (
     <>
-      <input type="date" name="birthday" />
-      <select name="example">
-        <option>選択肢のサンプル1</option>
-        <option>選択肢のサンプル2</option>
-        <option>選択肢のサンプル3</option>
-      </select>
-
+      <DropdownMenu>
+        <DropdownMenuTrigger>日付の設定</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <p>開始日を選んでください</p>
+          <input type="date" onChange={handleChange} />
+        </DropdownMenuContent>
+      </DropdownMenu>
       <div className="flex">
-        {studyHistory && <SimpleLineChart studydata={studyHistory} />}
+        {studyHistory && (
+          <SimpleLineChart choiceDay={choiceDay} studydata={studyHistory} />
+        )}
         {studyHistory && <TwoLevelPieChart />}
       </div>
     </>

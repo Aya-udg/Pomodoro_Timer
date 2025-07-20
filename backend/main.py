@@ -43,9 +43,13 @@ def read_timer_settings(session: Session = Depends(get_session)):
 # 同日の勉強データをまとめた勉強データの取得
 @app.get("/studyhistory/summary-by-date")
 def read_study_history_day(session: Session = Depends(get_session)):
-    statement = select(
-        StudyHistory.date, func.sum(StudyHistory.duration).label("total_minutes")
-    ).group_by(StudyHistory.date)
+    statement = (
+        select(
+            StudyHistory.date, func.sum(StudyHistory.duration).label("total_minutes")
+        )
+        .group_by(StudyHistory.date)
+        .order_by(StudyHistory.date)
+    )
     results = session.exec(statement).all()
     if not results:
         raise HTTPException(status_code="404", detail="勉強履歴がありません")

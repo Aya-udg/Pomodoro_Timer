@@ -14,24 +14,46 @@ import { StudyHistory } from "@/app/types/index";
 
 type Props = {
   studydata: StudyHistory[];
+  choiceDay: Date;
 };
 
-export function SimpleLineChart({ studydata }: Props) {
+export function SimpleLineChart({ choiceDay, studydata }: Props) {
+  // ユーザーが選択した日の1週間前の日付を取得
+  const oneWeekAgo = new Date(choiceDay);
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
   const data = studydata.flatMap((v) => {
-    return [{ name: v.date, 集中時間: v.duration / 60 }];
+    const targetDate = new Date(v.date);
+    if (oneWeekAgo <= targetDate) {
+      if (choiceDay >= targetDate) {
+        return [{ name: v.date, 集中時間: v.duration / 60 }];
+      }
+    }
   });
 
   console.log(studydata);
   return (
-    <BarChart width={400} height={400} data={data}>
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip formatter={(value) => `${value} 分`} />
-      <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
-      <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
-        <LabelList position="top" dataKey="集中時間" />
-      </Bar>
-    </BarChart>
+    <>
+      <div className="flex flex-col">
+        <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
+        <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
+        <BarChart width={400} height={400} data={data}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip
+            formatter={(value: number) =>
+              `${
+                Math.floor(value / 60) ? `${Math.floor(value / 60)}時間` : ""
+              }${value % 60} 分`
+            }
+          />
+          <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
+          <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
+            <LabelList position="top" dataKey="集中時間" />
+          </Bar>
+        </BarChart>
+      </div>
+    </>
   );
 }
 

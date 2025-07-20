@@ -47,8 +47,8 @@ export const usePomodoroTimer = (
   // タイマー終了時の処理
   const endTimer = async () => {
     const posdate: StudyHistory = {
-      date: date,
-      duration: workTime,
+      date: '2025/7/09',
+      duration: 3000,
     };
     console.log("現在のタイマータイプ:", timerType,posdate);
     console.log("セッションカウント:", sessionCount);
