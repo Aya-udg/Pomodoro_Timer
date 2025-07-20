@@ -25,7 +25,7 @@ export default function TimerSlider({
             setTimerSettings({ ...timerSettings, workTime: v[0] * 60 })
           }
           max={60}
-          step={5}
+          step={1}
         />
       </div>
       <div className="w-96 flex justify-center items-center mb-5">

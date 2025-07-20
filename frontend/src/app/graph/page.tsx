@@ -1,9 +1,24 @@
 "use client";
+import { useEffect, useState } from "react";
 import { SimpleLineChart, TwoLevelPieChart } from "@/app/components/Chart";
+import getStudyHistory from "../lib/getStudyHistory";
+import { StudyHistory } from "@/app/types/index";
 
 export default function app() {
+  const [studyHistory, setstudyHistory] = useState<StudyHistory[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const date = await getStudyHistory();
+      setstudyHistory(date);
+      console.log(date);
+    };
+    fetchData();
+  }, []);
+
   const now = new Date();
   const today = now.toLocaleDateString();
+  console.log(studyHistory);
 
   return (
     <>
@@ -13,12 +28,11 @@ export default function app() {
         <option>選択肢のサンプル2</option>
         <option>選択肢のサンプル3</option>
       </select>
-      <p>{today}</p>
+
       <div className="flex">
-        <SimpleLineChart today={today} />
-        <TwoLevelPieChart today={today} />
+        {studyHistory && <SimpleLineChart studydata={studyHistory} />}
+        {studyHistory && <TwoLevelPieChart />}
       </div>
-      <p>うに</p>
     </>
   );
 }

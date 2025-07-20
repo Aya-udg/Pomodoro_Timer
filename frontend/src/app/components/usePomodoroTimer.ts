@@ -2,7 +2,7 @@ import { useTimer } from "react-timer-hook";
 import { useEffect, useState } from "react";
 import { MyTimer } from "@/app/types/index";
 import { StudyHistory } from "@/app/types/index";
-import getStudyHistory from "../lib/getStudyHistory";
+import postStudyHistory from "../lib/postStudyHistory";
 
 export const usePomodoroTimer = (
   { workTime, breakTime, longBreakTime }: MyTimer,
@@ -57,7 +57,7 @@ export const usePomodoroTimer = (
       fanfarePlay();
       let newCount = sessionCount + 1;
       setSessionCount(newCount);
-      getStudyHistory(posdate);
+      postStudyHistory(posdate);
 
       if (newCount % 4 === 0) {
         setTimerType("longbreak");

@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from sqlmodel import Field, SQLModel, Session, select
+from sqlmodel import Session, select
 from settings import engine
 from models import Timer, StudyHistory
+from sqlalchemy import func
 
 app = FastAPI()
 
@@ -34,7 +35,7 @@ def get_session():
 def read_timer_settings(session: Session = Depends(get_session)):
     statement = select(Timer)
     results = session.exec(statement).all()
-    if not statement:
+    if not results:
         raise HTTPException(status_code=404, detail="データが存在しません")
     return results
 
@@ -42,11 +43,13 @@ def read_timer_settings(session: Session = Depends(get_session)):
 # 勉強データの取得
 @app.get("/studyhistory")
 def read_study_history(session: Session = Depends(get_session)):
-    statement = select(StudyHistory)
+    statement = select(
+        StudyHistory.date, func.sum(StudyHistory.duration).label("total_minutes")
+    ).group_by(StudyHistory.date)
     results = session.exec(statement).all()
-    if not statement:
+    if not results:
         raise HTTPException(status_code="404", detail="勉強履歴がありません")
-    return results
+    return [{"date": row[0], "duration": row[1]} for row in results]
 
 
 # 勉強データ追加

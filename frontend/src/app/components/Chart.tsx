@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   CartesianGrid,
   BarChart,
@@ -10,21 +9,31 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { StudyHistory } from "@/app/types/index";
 
-
-type props = {
-  today: string;
+type Props = {
+  studydata: StudyHistory[];
 };
 
-const data = [
-  { name: "A", value: 400 },
-  { name: "B", value: 200 },
-  { name: "C", value: 300 },
-  { name: "D", value: 350 },
-  { name: "E", value: 300 },
-];
+export function SimpleLineChart({ studydata }: Props) {
+  const data = studydata.flatMap((v) => {
+    return [
+      { name: v.date, value: v.duration / 60 },
+      { name: "B", value: 200 },
+      { name: "C", value: 300 },
+      { name: "D", value: 350 },
+      { name: "E", value: 300 },
+    ];
+  });
 
-export function SimpleLineChart(today: props) {
+  const a = [
+    { name: "A", value: 1 },
+    { name: "B", value: 200 },
+    { name: "C", value: 300 },
+    { name: "D", value: 350 },
+    { name: "E", value: 300 },
+  ];
+  console.log(studydata);
   return (
     <BarChart width={400} height={400} data={data}>
       <XAxis dataKey="name" />
@@ -56,7 +65,7 @@ const data02 = [
   { name: "D2", value: 50 },
 ];
 
-export const TwoLevelPieChart = (today: props) => {
+export const TwoLevelPieChart = () => {
   return (
     <ResponsiveContainer width="80%" height={400}>
       <PieChart>
