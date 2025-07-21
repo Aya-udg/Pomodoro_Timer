@@ -16,3 +16,8 @@ class StudyHistory(SQLModel, table=True):
     duration: int = Field(nullable=False)
     memo: Optional[str]
     tag: Optional[str]
+
+
+class User(SQLModel):
+    username: str
+    email: str | None = Field(default=None)

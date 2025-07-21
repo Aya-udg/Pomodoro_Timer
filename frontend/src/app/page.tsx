@@ -12,7 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import Link from "next/link";
+import Header from "@/app/components/Header";
 
 const DEFAULT_TIMER: MyTimer = {
   workTime: 1500,
@@ -37,6 +37,7 @@ export default function app() {
 
   return (
     <>
+      <Header />
       <TimerDisplay {...timer} />
       <div className="mt-10 flex justify-center">
         <DropdownMenu>
@@ -59,7 +60,6 @@ export default function app() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Link href="/graph">graphへ</Link>
     </>
   );
 }

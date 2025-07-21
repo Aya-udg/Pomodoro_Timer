@@ -15,13 +15,12 @@ import { StudyHistory } from "@/app/types/index";
 type Props = {
   studydata: StudyHistory[];
   choiceDay: Date;
+  oneWeekAgo: Date;
 };
 
-export function SimpleLineChart({ choiceDay, studydata }: Props) {
-  // ユーザーが選択した日の1週間前の日付を取得
-  const oneWeekAgo = new Date(choiceDay);
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+export function SimpleLineChart({ choiceDay, studydata, oneWeekAgo }: Props) {
 
+  // 1週間分のデータをグラフ化
   const data = studydata.flatMap((v) => {
     const targetDate = new Date(v.date);
     if (oneWeekAgo <= targetDate) {
@@ -31,7 +30,6 @@ export function SimpleLineChart({ choiceDay, studydata }: Props) {
     }
   });
 
-  console.log(studydata);
   return (
     <>
       <div className="flex flex-col">
