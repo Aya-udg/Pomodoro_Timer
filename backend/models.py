@@ -21,3 +21,7 @@ class StudyHistory(SQLModel, table=True):
 class User(SQLModel):
     username: str
     email: str | None = Field(default=None)
+
+
+class Tokendata(SQLModel):
+    pass
