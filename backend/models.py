@@ -23,5 +23,17 @@ class User(SQLModel):
     email: str | None = Field(default=None)
 
 
+# トークンのデータモデル
+class Token(SQLModel):
+    access_token: str
+    token_type: str
+
+
+# トークンに含まれるデータモデル
 class Tokendata(SQLModel):
-    pass
+    username: str | None = Field(default=None)
+
+
+# データベース内のユーザーデータモデル
+class UserInDB(User):
+    hashed_password: str
