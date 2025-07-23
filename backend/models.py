@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 
 class Timer(SQLModel, table=True):
@@ -19,8 +20,9 @@ class StudyHistory(SQLModel, table=True):
 
 
 class User(SQLModel):
-    username: str
-    email: str | None = Field(default=None)
+    id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(nullable=False)
+    email: str | None = Field(default=None, nullable=False)
 
 
 # トークンのデータモデル

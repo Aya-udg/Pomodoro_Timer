@@ -126,6 +126,12 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
+# ユーザー登録用のエンドポイント
+@app.post("/users/register/", response_model=User)
+def create_user(user: User):
+    pass
+
+
 # 現在のユーザー情報を取得するエンドポイント
 @app.get("/users/me/", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):

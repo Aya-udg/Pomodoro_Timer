@@ -11,6 +11,7 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "psycopg2>=2.9.10",
     "python-jose>=3.5.0",
+    "python-multipart>=0.0.20",
     "sqlmodel>=0.0.24",
     "uvicorn>=0.35.0",
 ]
