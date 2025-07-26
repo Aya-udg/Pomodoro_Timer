@@ -2,7 +2,6 @@
 import { Button } from "@/app/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -11,26 +10,21 @@ import {
 } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
-import { log } from "console";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
-
-type Inputs = {
-  email: string;
-  password: string;
-  comment: string;
-};
+import { Inputs, FormValues } from "@/app/types/index";
 
 export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<FormValues>({
+    resolver: zodResolver(Inputs),
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = (d) => console.log(d);
+  const onSubmit: SubmitHandler<FormValues> = (d) => console.log(d);
 
   return (
     <div className="bg-gradient-to-b from-slate-50 from- via-slate-50 via- to-slate-100  min-h-screen">
@@ -47,13 +41,7 @@ export default function LoginForm() {
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">メールアドレス</Label>
-                  <Input
-                    type="email"
-                    placeholder="m@example.com"
-                    {...register("email", {
-                      required: "メールアドレスを入力してください",
-                    })}
-                  />
+                  <Input placeholder="m@example.com" {...register("email")} />
                   {errors.email?.message && (
                     <p className="text-red-600">{errors.email.message}</p>
                   )}
@@ -72,21 +60,8 @@ export default function LoginForm() {
                     id="password"
                     type="password"
                     placeholder="6文字以上15文字以下"
-                    {...register("password", {
-                      minLength: {
-                        value: 6,
-                        message: "6文字以上で入力してください",
-                      },
-                      maxLength: {
-                        value: 15,
-                        message: "15文字以下で入力してください",
-                      },
-                      required: "パスワードを入力してください",
-                    })}
+                    {...register("password")}
                   />
-                  {errors.comment?.message && (
-                    <p className="text-red-600">{errors.comment.message}</p>
-                  )}
                   {errors.password?.message && (
                     <p className="text-red-600">{errors.password.message}</p>
                   )}

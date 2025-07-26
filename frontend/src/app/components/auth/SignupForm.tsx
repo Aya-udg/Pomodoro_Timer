@@ -12,19 +12,8 @@ import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const Inputs = z.object({
-  email: z.string(),
-  password: z
-    .string()
-    .min(6, { message: "6文字以上で入力してください" })
-    .max(15, { message: "15文字以下で入力してください" }),
-  comment: z.string(),
-});
-
-type FormValues = z.infer<typeof Inputs>;
+import { Inputs, FormValues } from "@/app/types/index";
 
 export default function SignupForm() {
   const {
@@ -50,13 +39,7 @@ export default function SignupForm() {
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">メールアドレス</Label>
-                  <Input
-                    type="email"
-                    placeholder="m@example.com"
-                    {...register("email", {
-                      required: "メールアドレスを入力してください",
-                    })}
-                  />
+                  <Input placeholder="m@example.com" {...register("email")} />
                   {errors.email?.message && (
                     <p className="text-red-600">{errors.email.message}</p>
                   )}
@@ -69,21 +52,8 @@ export default function SignupForm() {
                     id="password"
                     type="password"
                     placeholder="6文字以上15文字以下"
-                    {...register("password", {
-                      minLength: {
-                        value: 6,
-                        message: "6文字以上で入力してください",
-                      },
-                      maxLength: {
-                        value: 15,
-                        message: "15文字以下で入力してください",
-                      },
-                      required: "パスワードを入力してください",
-                    })}
+                    {...register("password")}
                   />
-                  {errors.comment?.message && (
-                    <p className="text-red-600">{errors.comment.message}</p>
-                  )}
                   {errors.password?.message && (
                     <p className="text-red-600">{errors.password.message}</p>
                   )}
