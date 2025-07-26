@@ -19,10 +19,10 @@ class StudyHistory(SQLModel, table=True):
     tag: Optional[str]
 
 
-class User(SQLModel):
+class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(nullable=False)
-    email: str | None = Field(default=None, nullable=False)
+    hashed_password: str = Field(nullable=False)
 
 
 # トークンのデータモデル
@@ -32,10 +32,17 @@ class Token(SQLModel):
 
 
 # トークンに含まれるデータモデル
-class Tokendata(SQLModel):
+class TokenData(SQLModel):
     username: str | None = Field(default=None)
 
 
-# データベース内のユーザーデータモデル
-class UserInDB(User):
-    hashed_password: str
+# ユーザー登録用のモデル
+class UserCreate(SQLModel):
+    username: str
+    password: str
+
+
+# ログイン用のモデル
+class UserLogin(SQLModel):
+    username: str
+    password: str

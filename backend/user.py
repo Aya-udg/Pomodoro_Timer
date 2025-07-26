@@ -2,7 +2,9 @@ from jose import jwt, JWTError
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from models import User, Token, Tokendata, UserInDB
+from sqlmodel import Session, select
+from settings import engine
+from models import User, Token, TokenData, UserRead
 from datetime import datetime, timedelta, timezone
 
 # JWTトークンの設定
@@ -11,23 +13,11 @@ from datetime import datetime, timedelta, timezone
 ***REMOVED***
 
 
-# ダミーのユーザーデータ
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
-        "disabled": False,
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
-        "disabled": True,
-    },
-}
+# 依存関係作成
+def get_session():
+    with Session(engine) as session:
+        yield session
+
 
 # パスワードのハッシュ化に使用するコンテキスト
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -49,15 +39,15 @@ def get_password_hash(password):
 
 
 # ユーザー名からユーザー情報を取得する関数
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+def get_user(username: str, session: Session):
+    statement = select(User).where(User.username == username)
+    result = session.exec(statement).first()
+    return result
 
 
 # ユーザーの認証関数
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(username: str, password: str, session: Session):
+    user = get_user(username, session)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -80,7 +70,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 # 現在のユーザーを取得する関数
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -91,10 +83,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = Tokendata(username=username)
+        token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(token_data.username, session)
     if user is None:
         raise credentials_exception
     return user
@@ -111,8 +103,9 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 @app.post("/token")
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
+    session: Session = Depends(get_session),
 ) -> Token:
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -128,12 +121,22 @@ async def login_for_access_token(
 
 # ユーザー登録用のエンドポイント
 @app.post("/users/register/", response_model=User)
-def create_user(user: User):
-    pass
+def create_user(username: str, password: str, session: Session = Depends(get_session)):
+    user = get_user(username, session)
+    if user:
+        raise HTTPException(
+            status_code=400, detail="このユーザー名は既に登録されています"
+        )
+    hashed_password = get_password_hash(password)
+    new_user = User(username=username, hashed_password=hashed_password)
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+    return new_user
 
 
 # 現在のユーザー情報を取得するエンドポイント
-@app.get("/users/me/", response_model=User)
+@app.get("/users/me/", response_model=UserRead)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
