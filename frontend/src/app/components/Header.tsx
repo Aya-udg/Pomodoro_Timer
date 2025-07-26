@@ -11,6 +11,9 @@ export default function Header() {
         <Link className="mx-10" href="/graph">
           グラフ
         </Link>
+        <Link className="mx-10" href="/login">
+          ログイン
+        </Link>
       </nav>
     </header>
   );
