@@ -13,6 +13,7 @@ import { Label } from "@/app/components/ui/label";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast, { Toaster } from "react-hot-toast";
 import { Inputs, FormValues } from "@/app/types/index";
 
 export default function SignupForm() {
@@ -24,10 +25,22 @@ export default function SignupForm() {
     resolver: zodResolver(Inputs),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (d) => console.log(d);
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (res.ok) {
+      toast.success("ユーザー登録が完了しました！ログインしてください");
+    } else {
+      toast.error("ユーザー登録に失敗しました");
+    }
+  };
 
   return (
     <div className="bg-gradient-to-b from-slate-50 from- via-slate-50 via- to-slate-100 min-h-screen">
+      <Toaster />
       <div className="flex  items-center mx-auto justify-center max-w-sm pt-30">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <Card>
@@ -38,10 +51,14 @@ export default function SignupForm() {
             <CardContent>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="email">メールアドレス</Label>
-                  <Input placeholder="m@example.com" {...register("email")} />
-                  {errors.email?.message && (
-                    <p className="text-red-600">{errors.email.message}</p>
+                  <Label htmlFor="username">ユーザーネーム</Label>
+                  <Input
+                    id="username"
+                    placeholder="gest"
+                    {...register("username")}
+                  />
+                  {errors.username?.message && (
+                    <p className="text-red-600">{errors.username.message}</p>
                   )}
                 </div>
                 <div className="grid gap-2">

@@ -4,8 +4,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 from settings import engine
-from models import User, Token, TokenData, UserRead
+from models import User, Token, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
+from fastapi.middleware.cors import CORSMiddleware
 
 # JWTトークンの設定
 ***REMOVED***
@@ -25,7 +26,24 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # このURLにユーザー名とパスワードが送信される
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # パスワードの検証関数
@@ -121,14 +139,14 @@ async def login_for_access_token(
 
 # ユーザー登録用のエンドポイント
 @app.post("/users/register/", response_model=User)
-def create_user(username: str, password: str, session: Session = Depends(get_session)):
-    user = get_user(username, session)
+def create_user(user_create: UserCreate, session: Session = Depends(get_session)):
+    user = get_user(user_create.username, session)
     if user:
         raise HTTPException(
             status_code=400, detail="このユーザー名は既に登録されています"
         )
-    hashed_password = get_password_hash(password)
-    new_user = User(username=username, hashed_password=hashed_password)
+    hashed_password = get_password_hash(user_create.password)
+    new_user = User(username=user_create.username, hashed_password=hashed_password)
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
@@ -136,12 +154,6 @@ def create_user(username: str, password: str, session: Session = Depends(get_ses
 
 
 # 現在のユーザー情報を取得するエンドポイント
-@app.get("/users/me/", response_model=UserRead)
+@app.get("/users/me/", response_model=UserLogin)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
-
-
-# 現在のユーザーのアイテムを取得するエンドポイント
-@app.get("/users/me/items")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]

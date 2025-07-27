@@ -15,12 +15,10 @@ export type StudyHistory = {
 };
 
 export const Inputs = z.object({
-  email: z
+  username: z
     .string()
-    .min(1, { error: "メールアドレスを入力してください" })
-    .refine((val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
-      error: "メールアドレスの形式が正しくありません",
-    }),
+    .min(1, { error: "名前を入力して下さい" })
+    .max(15, { error: "15文字以下で入力してください" }),
   password: z
     .string()
     .min(1, { error: "パスワードを入力してください" })

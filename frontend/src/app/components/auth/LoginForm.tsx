@@ -14,6 +14,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Inputs, FormValues } from "@/app/types/index";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const {
@@ -24,26 +26,50 @@ export default function LoginForm() {
     resolver: zodResolver(Inputs),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (d) => console.log(d);
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(data),
+    });
+
+    if (res.ok) {
+      toast.success("ログインしました！ホーム画面に戻ります");
+      setTimeout(() => {
+        router.push("/");
+      }, 1800);
+    } else {
+      toast.error("認証失敗しましたた");
+    }
+  };
 
   return (
     <div className="bg-gradient-to-b from-slate-50 from- via-slate-50 via- to-slate-100  min-h-screen">
+      <div>
+        <Toaster />
+      </div>
       <div className="flex  items-center mx-auto justify-center max-w-sm pt-30">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
               <CardTitle className="text-center text-xl">ログイン</CardTitle>
               <CardDescription>
-                ログインするにはパスワードとメールアドレスを入力してください
+                ログインするにはユーザーネームとパスワードを入力してください
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="email">メールアドレス</Label>
-                  <Input placeholder="m@example.com" {...register("email")} />
-                  {errors.email?.message && (
-                    <p className="text-red-600">{errors.email.message}</p>
+                  <Label htmlFor="username">ユーザーネーム</Label>
+                  <Input
+                    id="username"
+                    placeholder="gest"
+                    {...register("username")}
+                  />
+                  {errors.username?.message && (
+                    <p className="text-red-600">{errors.username.message}</p>
                   )}
                 </div>
                 <div className="grid gap-2">
