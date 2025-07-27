@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 from settings import engine
+import bcrypt
 from models import User, Token, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,8 +21,8 @@ def get_session():
         yield session
 
 
-# パスワードのハッシュ化に使用するコンテキスト
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# # パスワードのハッシュ化に使用するコンテキスト
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # このURLにユーザー名とパスワードが送信される
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -48,12 +49,17 @@ app.add_middleware(
 
 # パスワードの検証関数
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    password_byte_enc = plain_password.encode("utf-8")
+    hashed_password_enc = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password_byte_enc, hashed_password_enc)
 
 
 # パスワードのハッシュ化関数
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password=bytes, salt=salt)
+    return hashed_password
 
 
 # ユーザー名からユーザー情報を取得する関数

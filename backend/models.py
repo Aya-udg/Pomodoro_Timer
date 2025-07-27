@@ -42,7 +42,6 @@ class UserCreate(SQLModel):
     password: str
 
 
-# ログイン用のモデル
+# カレントユーザー取得用のモデル
 class UserLogin(SQLModel):
     username: str
-    password: str

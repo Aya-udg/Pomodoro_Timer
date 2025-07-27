@@ -34,8 +34,10 @@ export default function LoginForm() {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(data),
     });
-
+    const result = await res.json();
+    // ログイン成功
     if (res.ok) {
+      localStorage.setItem("token", result.token);
       toast.success("ログインしました！ホーム画面に戻ります");
       setTimeout(() => {
         router.push("/");
