@@ -4,15 +4,10 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 from settings import engine
-import bcrypt
+import os
 from models import User, Token, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
 from fastapi.middleware.cors import CORSMiddleware
-
-# JWTトークンの設定
-***REMOVED***
-***REMOVED***
-***REMOVED***
 
 
 # 依存関係作成
@@ -21,8 +16,13 @@ def get_session():
         yield session
 
 
-# # パスワードのハッシュ化に使用するコンテキスト
-# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+
+# パスワードのハッシュ化に使用するコンテキスト
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 # このURLにユーザー名とパスワードが送信される
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -49,17 +49,12 @@ app.add_middleware(
 
 # パスワードの検証関数
 def verify_password(plain_password, hashed_password):
-    password_byte_enc = plain_password.encode("utf-8")
-    hashed_password_enc = hashed_password.encode("utf-8")
-    return bcrypt.checkpw(password_byte_enc, hashed_password_enc)
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 # パスワードのハッシュ化関数
 def get_password_hash(password):
-    bytes = password.encode("utf-8")
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password=bytes, salt=salt)
-    return hashed_password
+    return pwd_context.hash(password)
 
 
 # ユーザー名からユーザー情報を取得する関数
@@ -136,7 +131,7 @@ async def login_for_access_token(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
