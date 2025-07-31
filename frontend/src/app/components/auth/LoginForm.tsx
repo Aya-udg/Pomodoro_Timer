@@ -31,13 +31,14 @@ export default function LoginForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const res = await fetch("/api/login", {
       method: "POST",
+      // URLエンコード形式で送る
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(data),
     });
     const result = await res.json();
     // ログイン成功
+    console.log(result);
     if (res.ok) {
-      localStorage.setItem("token", result.token);
       toast.success("ログインしました！ホーム画面に戻ります");
       setTimeout(() => {
         router.push("/");

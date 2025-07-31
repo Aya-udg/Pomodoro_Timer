@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   });
 
   const data = await res.json();
-  cookieStore.set("token",data.token);
+  cookieStore.set("token",data.access_token,{httpOnly:true});
   if (res.ok) {
     return NextResponse.json({ data }, { status: 200 });
   } else {

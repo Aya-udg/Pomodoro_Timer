@@ -13,16 +13,18 @@ export default function Header() {
           "Content-Type": "application/json",
         },
       });
-      setUsername("a");
+      const result = await res.json();
+      setUsername(result.data.username);
     };
     fetchData();
   }, []);
 
   return (
-    <header className="max-w-400 relative">
+    <header className="max-w-[400px] relative">
       <div className="bg-amber-200 p-3 flex justify-between fixed top-0 right-0 left-0">
         <h1 className="text-left">ヘッダーです</h1>
-        <p>こんにちは：さん</p>
+        <div>{username && <p>こんにちは：{username}さん</p>}</div>
+
         <nav>
           <Link className="mx-10" href="/">
             タイマー
