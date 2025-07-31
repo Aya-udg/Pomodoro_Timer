@@ -20,9 +20,11 @@ class StudyHistory(SQLModel, table=True):
 
 
 class User(SQLModel, table=True):
+    __tablename__ = "users"
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(nullable=False)
     hashed_password: str = Field(nullable=False)
+    disabled: bool | None = Field(default=None)
 
 
 # トークンのデータモデル
