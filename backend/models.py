@@ -28,9 +28,10 @@ class User(SQLModel, table=True):
 
 
 # トークンのデータモデル
-class Token(SQLModel):
+class TokenWithUsername(SQLModel):
     access_token: str
     token_type: str
+    username: str
 
 
 # トークンに含まれるデータモデル

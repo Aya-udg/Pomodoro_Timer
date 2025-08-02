@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from sqlmodel import Session, select
 from settings import engine
 import os
-from models import User, Token, TokenData, UserCreate, UserLogin
+from models import User, TokenWithUsername, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -123,7 +123,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
-) -> Token:
+):
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(
@@ -135,7 +135,9 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+    return TokenWithUsername(
+        access_token=access_token, token_type="bearer", username=user.username
+    )
 
 
 # ユーザー登録用のエンドポイント

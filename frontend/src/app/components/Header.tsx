@@ -1,30 +1,32 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useUserStore } from "@/app/components/userStore";
 
 export default function Header() {
-  const [username, setUsername] = useState<string | null>(null);
+  const { username, setUsername } = useUserStore();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/currentUser", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await res.json();
-      setUsername(result.data.username);
-    };
-    fetchData();
-  }, []);
+  const logout = async () => {
+    const res = await fetch("/api/logout", {
+      method: "POST",
+    });
+    if (res.ok) {
+      toast.success("ログアウトしました！");
+      setUsername("");
+    } else {
+      toast.error("ログインしていません");
+    }
+  };
 
   return (
     <header className="max-w-[400px] relative">
+      <Toaster />
       <div className="bg-amber-200 p-3 flex justify-between fixed top-0 right-0 left-0">
         <h1 className="text-left">ヘッダーです</h1>
-        <div>{username && <p>こんにちは：{username}さん</p>}</div>
-
+        <p>こんにちは：{username ? username : "ゲスト"}さん</p>
+        <div>
+          <button></button>
+        </div>
         <nav>
           <Link className="mx-10" href="/">
             タイマー
@@ -36,6 +38,7 @@ export default function Header() {
             ログイン
           </Link>
         </nav>
+        <button onClick={logout}>ログアウト</button>
       </div>
     </header>
   );

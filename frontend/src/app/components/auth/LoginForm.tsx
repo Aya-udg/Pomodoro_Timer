@@ -16,6 +16,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Inputs, FormValues } from "@/app/types/index";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "../userStore";
 
 export default function LoginForm() {
   const {
@@ -25,6 +26,8 @@ export default function LoginForm() {
   } = useForm<FormValues>({
     resolver: zodResolver(Inputs),
   });
+
+  const { setUsername } = useUserStore();
 
   const router = useRouter();
 
@@ -37,7 +40,7 @@ export default function LoginForm() {
     });
     const result = await res.json();
     // ログイン成功
-    console.log(result);
+    setUsername(result.data.username);
     if (res.ok) {
       toast.success("ログインしました！ホーム画面に戻ります");
       setTimeout(() => {
