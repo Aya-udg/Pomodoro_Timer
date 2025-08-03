@@ -10,6 +10,7 @@ export type StudyHistory = {
   id?: number;
   date: string;
   duration: number;
+  username: string;
   memo?: string;
   tag?: string;
 };
@@ -29,4 +30,4 @@ export const Inputs = z.object({
     }),
 });
 
- export type FormValues = z.infer<typeof Inputs>;
+export type FormValues = z.infer<typeof Inputs>;

@@ -1,5 +1,5 @@
 from jose import jwt, JWTError
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlmodel import Session, select
@@ -8,6 +8,7 @@ import os
 from models import User, TokenWithUsername, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter
 
 
 # 依存関係作成
@@ -27,24 +28,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # このURLにユーザー名とパスワードが送信される
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-
-app = FastAPI()
-
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:3000",
-    "http://localhost:8080",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+router = APIRouter()
 
 
 # パスワードの検証関数
@@ -97,6 +81,8 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    if not token:
+        raise HTTPException(status_code=401, detail="not token")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -119,10 +105,11 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 
 # アクセストークンを取得するためのエンドポイント
-@app.post("/token")
+@router.post("/token")
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
+    tags=["users"],
 ):
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
@@ -141,7 +128,7 @@ async def login_for_access_token(
 
 
 # ユーザー登録用のエンドポイント
-@app.post("/users/register/", response_model=User)
+@router.post("/users/register/", response_model=User, tags=["users"])
 def create_user(user_create: UserCreate, session: Session = Depends(get_session)):
     user = get_user(user_create.username, session)
     if user:
@@ -157,6 +144,6 @@ def create_user(user_create: UserCreate, session: Session = Depends(get_session)
 
 
 # 現在のユーザー情報を取得するエンドポイント
-@app.get("/users/me/", response_model=UserLogin)
+@router.get("/users/me/", response_model=UserLogin, tags=["users"])
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user

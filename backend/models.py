@@ -13,6 +13,7 @@ class Timer(SQLModel, table=True):
 
 class StudyHistory(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(nullable=False)
     date: str = Field(nullable=False)
     duration: int = Field(nullable=False)
     memo: Optional[str]

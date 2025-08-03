@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MyTimer } from "@/app/types/index";
 import { StudyHistory } from "@/app/types/index";
 import postStudyHistory from "../lib/postStudyHistory";
+import { useUserStore } from "@/app/components/userStore";
 
 export const usePomodoroTimer = (
   { workTime, breakTime, longBreakTime }: MyTimer,
@@ -13,7 +14,7 @@ export const usePomodoroTimer = (
   const [timerType, setTimerType] = useState<"timer" | "break" | "longbreak">(
     "timer"
   ); //タイマーの状態
-
+  const { username } = useUserStore();
   const getExpiryTime = (seconds: number) => {
     const time = new Date();
     time.setSeconds(time.getSeconds() + seconds);
@@ -47,17 +48,20 @@ export const usePomodoroTimer = (
   // タイマー終了時の処理
   const endTimer = async () => {
     const posdate: StudyHistory = {
-      date: '2025/7/09',
-      duration: 3000,
+      date: date,
+      duration: workTime,
+      username: username!
     };
-    console.log("現在のタイマータイプ:", timerType,posdate);
+    console.log("現在のタイマータイプ:", timerType, posdate);
     console.log("セッションカウント:", sessionCount);
 
     if (timerType === "timer") {
       fanfarePlay();
       let newCount = sessionCount + 1;
       setSessionCount(newCount);
-      postStudyHistory(posdate);
+      console.log(posdate)
+      // ユーザー登録していたらDBに保存
+      username && postStudyHistory(posdate);
 
       if (newCount % 4 === 0) {
         setTimerType("longbreak");

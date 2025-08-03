@@ -2,7 +2,7 @@
 .env
 
 # Python 仮想環境
-venv/
+.venv/
 backend/__pycache__/
 *.py[cod]
 *$py.class

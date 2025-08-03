@@ -1,6 +1,9 @@
+
+const DB_URL = process.env.NEXT_PUBLIC_API_URL
+
 export const fetchTimerSettings  = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/timer");
+      const res = await fetch(`${DB_URL}/timer`);
       const data = await res.json();
       const workTime = data.set_time * 60; // 分 → 秒 に変換しとく
       const breakTime = data.break_time * 60;

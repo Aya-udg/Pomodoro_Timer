@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 
+const DB_URL = process.env.NEXT_PUBLIC_API_URL
+
 export async function POST(request: Request) {
   const body = await request.json();
 
-  const res = await fetch("http://127.0.0.1:8000/users/register/", {
+  const res = await fetch(`${DB_URL}/users/register/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

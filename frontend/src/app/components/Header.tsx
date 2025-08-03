@@ -2,6 +2,7 @@
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import { useUserStore } from "@/app/components/userStore";
+import { useEffect } from "react";
 
 export default function Header() {
   const { username, setUsername } = useUserStore();
@@ -17,6 +18,19 @@ export default function Header() {
       toast.error("ログインしていません");
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/currentuser", {
+        method: "GET",
+      });
+      const result = await res.json();
+      if (res.ok) {
+        setUsername(result.data.username);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <header className="max-w-[400px] relative">

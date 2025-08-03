@@ -1,5 +1,12 @@
-export async function getStudyHistoryDay() {
-    const res = await fetch('http://127.0.0.1:8000/studyhistory/summary-by-date')
+
+const DB_URL = process.env.NEXT_PUBLIC_API_URL
+
+export async function getStudyHistoryDay(username:string) {
+    const res = await fetch(`${DB_URL}/studyhistory/summary-by-date`,{
+        method:'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(username)
+    })
     if(!res.ok){
         return console.log('エラー発生')
     }
@@ -8,7 +15,7 @@ export async function getStudyHistoryDay() {
 }
 
 export async function getStudyHistoryTag() {
-    const res = await fetch('http://127.0.0.1:8000/studyhistory/summary-by-date')
+    const res = await fetch(`${DB_URL}/studyhistory/summary-by-tag`)
     if(!res.ok){
         return console.log('エラー発生')
     }

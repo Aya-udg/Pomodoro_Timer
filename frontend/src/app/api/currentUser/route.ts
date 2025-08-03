@@ -1,10 +1,12 @@
 import { cookies } from "next/headers";
 import { NextResponse, NextRequest } from "next/server";
 
+const DB_URL = process.env.NEXT_PUBLIC_API_URL
+
 export async function GET(request: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-  const res = await fetch("http://127.0.0.1:8000/users/me/", {
+  const res = await fetch(`${DB_URL}/users/me/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

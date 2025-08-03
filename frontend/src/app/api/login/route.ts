@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
+const DB_URL = process.env.NEXT_PUBLIC_API_URL
+
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
 
@@ -9,7 +11,7 @@ export async function POST(request: NextRequest) {
   const username = form.get("username") as string;
   const password = form.get("password") as string;
 
-  const res = await fetch("http://127.0.0.1:8000/token", {
+  const res = await fetch(`${DB_URL}/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
