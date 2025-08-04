@@ -1,6 +1,9 @@
 services:
     backend:
-      bild:
+      container_name: backend
+      restart: always
+      volumes:
+        -  ./app:/app
       
     db:
       image: postgres:17
