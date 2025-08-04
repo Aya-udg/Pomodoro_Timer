@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Depends, APIRouter, status
 from sqlmodel import Session, select
-from settings import engine
-from models import Timer, StudyHistory
+from models.settings import engine
+from models.models import Timer, StudyHistory
 from sqlalchemy import func
 
 

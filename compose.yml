@@ -1,7 +1,11 @@
 services:
+    backend:
+      bild:
+      
     db:
       image: postgres:17
       container_name: Timer
+      restart: always
       env_file:
         - .env
       ports:

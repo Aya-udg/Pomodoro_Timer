@@ -9,7 +9,7 @@ from alembic import context
 
 from models import Timer
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv(dotenv_path="../../.env")
 database_url = os.getenv("POSTGRES_URL")
 
 # this is the Alembic Config object, which provides
