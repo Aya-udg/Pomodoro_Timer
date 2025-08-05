@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.models import Timer, StudyHistory
 from api import study_record, users
 
 app = FastAPI()
