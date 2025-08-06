@@ -43,23 +43,23 @@ export const usePomodoroTimer = (
     else if (timerType === "break") time = breakTime;
     else time = longBreakTime;
     restart(getExpiryTime(time), false);
-  }, [workTime, breakTime, longBreakTime]);
+  }, [workTime, breakTime, longBreakTime, restart, timerType]);
 
   // タイマー終了時の処理
   const endTimer = async () => {
     const posdate: StudyHistory = {
       date: date,
       duration: workTime,
-      username: username!
+      username: username!,
     };
     console.log("現在のタイマータイプ:", timerType, posdate);
     console.log("セッションカウント:", sessionCount);
 
     if (timerType === "timer") {
       fanfarePlay();
-      let newCount = sessionCount + 1;
+      const  newCount = sessionCount + 1;
       setSessionCount(newCount);
-      console.log(posdate)
+      console.log(posdate);
       // ユーザー登録していたらDBに保存
       username && postStudyHistory(posdate);
 

@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse} from "next/server";
 
 const DB_URL = process.env.NEXT_PUBLIC_API_URL
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   const res = await fetch(`${DB_URL}/users/me/`, {
