@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import study_record, users
+from api import study_record, users, calendar
 
 app = FastAPI()
 
@@ -22,3 +22,4 @@ app.add_middleware(
 
 app.include_router(study_record.router)
 app.include_router(users.router)
+app.include_router(calendar.router)

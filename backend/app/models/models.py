@@ -11,6 +11,18 @@ class Timer(SQLModel, table=True):
     second: int | None
 
 
+class Schedule(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str = Field(nullable=False)
+    start: datetime = Field(nullable=False)
+    end: datetime = Field(nullable=False)
+    completed: bool = Field(nullable=False)
+    description: Optional[str] = Field(default=None, nullable=True)
+    timer: int = Field(nullable=False)
+    memo: Optional[str] = Field(default=None, nullable=True)
+    color: str = Field(nullable=False)
+
+
 class StudyHistory(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(nullable=False)

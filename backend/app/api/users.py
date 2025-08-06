@@ -8,7 +8,6 @@ import os
 from models.models import User, TokenWithUsername, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import APIRouter
 
 
 # 依存関係作成

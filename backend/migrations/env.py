@@ -1,15 +1,20 @@
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import MetaData, engine_from_config, pool
 
 from alembic import context
 
-from models import Timer
 
-load_dotenv(dotenv_path="../../.env")
+from app.models.models import Timer, Schedule, StudyHistory, User
+
+# 3階層上の .env を指定
+env_path = Path(__file__).resolve().parents[2] / ".env"
+
+load_dotenv(dotenv_path=env_path)
+
 database_url = os.getenv("POSTGRES_URL")
 
 # this is the Alembic Config object, which provides
@@ -24,11 +29,22 @@ config.set_main_option("sqlalchemy.url", database_url)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Timer.metadata
+def combine_metadata(*args):
+    m = MetaData()
+    for metadata in args:
+        for t in metadata.tables.values():
+            t.tometadata(m)
+    return m
+
+
+target_metadata = combine_metadata(
+    User.metadata, Timer.metadata, Schedule.metadata, StudyHistory.metadata
+)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
