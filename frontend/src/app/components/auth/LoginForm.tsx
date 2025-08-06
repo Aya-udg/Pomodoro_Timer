@@ -38,10 +38,11 @@ export default function LoginForm() {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(data),
     });
-    const result = await res.json();
-    // ログイン成功
-    setUsername(result.data.username);
+
     if (res.ok) {
+      const result = await res.json();
+      // ログイン成功
+      setUsername(result.data.username);
       toast.success("ログインしました！ホーム画面に戻ります");
       setTimeout(() => {
         router.push("/");

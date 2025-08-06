@@ -1,7 +1,22 @@
 services:
+    frontend:
+      build:
+      context: .
+      environment:
+      NODE_ENV: production
+      ports:
+        - ${FRONTEND_PORT}:3000
+    backend:
+      container_name: backend
+      restart: always
+      volumes:
+        -  ./app:/app
+      ports:
+        - ${BACKEND_PORT}:8000
     db:
       image: postgres:17
       container_name: Timer
+      restart: always
       env_file:
         - .env
       ports:

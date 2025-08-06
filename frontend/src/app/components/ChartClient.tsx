@@ -8,8 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
 
-export default function app({ studydata }: { studydata: StudyHistory[] }) {
-  const [studyHistory, setstudyHistory] = useState<StudyHistory[]>(studydata);
+export default function ChartClient({
+  studydata,
+}: {
+  studydata: StudyHistory[];
+}) {
+  const [studyHistory] = useState<StudyHistory[]>(studydata);
   //  選択した日
   const [choiceDay, setChoiceDay] = useState<Date>(new Date());
 

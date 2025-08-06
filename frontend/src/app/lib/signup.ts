@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import {FormValues} from '@/app/types/index'
 
 export default async function singup({username,password}:FormValues){
@@ -9,7 +8,9 @@ export default async function singup({username,password}:FormValues){
     })
     if(res.ok){
         const data = await res.json();
+        return data
     }else{
         const error = await res.json()
+        return error
     }
 }

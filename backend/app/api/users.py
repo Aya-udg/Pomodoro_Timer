@@ -3,9 +3,9 @@ from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlmodel import Session, select
-from settings import engine
+from models.settings import engine
 import os
-from models import User, TokenWithUsername, TokenData, UserCreate, UserLogin
+from models.models import User, TokenWithUsername, TokenData, UserCreate, UserLogin
 from datetime import datetime, timedelta, timezone
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import APIRouter

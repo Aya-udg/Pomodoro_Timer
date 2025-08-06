@@ -30,7 +30,7 @@ export default function Header() {
       }
     };
     fetchData();
-  }, []);
+  }, [setUsername]);
 
   return (
     <header className="max-w-[400px] relative">
