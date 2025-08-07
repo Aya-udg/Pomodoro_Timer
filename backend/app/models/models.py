@@ -1,7 +1,6 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 
 class Timer(SQLModel, table=True):
@@ -24,7 +23,7 @@ class Schedule(SQLModel, table=True):
 
 
 class StudyHistory(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(nullable=False)
     date: str = Field(nullable=False)
     duration: int = Field(nullable=False)
@@ -34,7 +33,7 @@ class StudyHistory(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(nullable=False)
     hashed_password: str = Field(nullable=False)
     disabled: bool | None = Field(default=None)
@@ -49,7 +48,7 @@ class TokenWithUsername(SQLModel):
 
 # トークンに含まれるデータモデル
 class TokenData(SQLModel):
-    username: str | None = Field(default=None)
+    username: Optional[int] = Field(default=None)
 
 
 # ユーザー登録用のモデル

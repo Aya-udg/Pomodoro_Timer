@@ -42,6 +42,9 @@ export default function Header() {
           <button></button>
         </div>
         <nav>
+          <Link className="mx-10" href="/calendar">
+            カレンダー
+          </Link>
           <Link className="mx-10" href="/">
             タイマー
           </Link>
