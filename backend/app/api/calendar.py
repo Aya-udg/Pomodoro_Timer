@@ -23,7 +23,7 @@ def get_schedule(session: Session = Depends(get_session)):
 
 
 # 登録
-@router.post("/registr", response_model=Schedule)
+@router.post("/schedule-registr", response_model=Schedule)
 def schedule_registr(schedule: Schedule, session: Session = Depends(get_session)):
     new_schedule = Schedule(
         title=schedule.title,
@@ -42,7 +42,7 @@ def schedule_registr(schedule: Schedule, session: Session = Depends(get_session)
 
 
 # 更新
-@router.put("/update/{item_id}", response_model=Schedule)
+@router.put("/schedule-update/{item_id}", response_model=Schedule)
 def schedule_update(
     item_id: int, updated_schedule: Schedule, session: Session = Depends(get_session)
 ):
@@ -66,7 +66,7 @@ def schedule_update(
 
 
 # 削除
-@router.delete("/delete/{item_id}", response_model=Schedule)
+@router.delete("/schedule-delete/{item_id}", response_model=Schedule)
 def schedule_delete(item_id: int, session: Session = Depends(get_session)):
     statement = select(Schedule).where(Schedule.id == item_id)
     results = session.exec(statement)
