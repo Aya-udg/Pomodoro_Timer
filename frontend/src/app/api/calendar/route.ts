@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 const DB_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,11 +15,14 @@ export async function GET() {
   return resData;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
   const res = await fetch(`${DB_URL}/schedule-registr`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(request),
   });
@@ -30,7 +34,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(id: Request) {
+export async function DELETE(id: NextRequest) {
   const res = await fetch(`${DB_URL}/schedule-delete/${id}`, {
     method: "DELETE",
   });
@@ -42,8 +46,11 @@ export async function DELETE(id: Request) {
   return resData;
 }
 
-export async function PUT(request: Request,{params}:{params:Promise<{id:string}>}){
-  const id= (await params).id
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
   const res = await fetch(`${DB_URL}/schedule-update/${id}`, {
     method: "PUT",
     headers: {

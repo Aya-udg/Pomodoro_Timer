@@ -1,41 +1,39 @@
-import { StudyHistory } from "@/app/types/index";
+import { error } from "console";
+import { NextResponse, NextRequest } from "next/server";
 
-const DB_URL = process.env.NEXT_PUBLIC_API_URL
+const DB_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getStudyHistoryDay(username:string) {
-    const res = await fetch(`${DB_URL}/studyhistory/summary-by-date`,{
-        method:'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(username)
-    })
-    if(!res.ok){
-        return console.log('エラー発生')
-    }
-    const date = await res.json()
-    return date
+export async function GET(request: NextRequest) {
+  const res = await fetch(`${DB_URL}/studyhistory/summary-by-date`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    return NextResponse.json({ error }, { status: 500 });
+  }
+  return NextResponse.json({ data }, { status: 200 });
 }
 
-export async function getStudyHistoryTag() {
-    const res = await fetch(`${DB_URL}/studyhistory/summary-by-tag`)
-    if(!res.ok){
-        return console.log('エラー発生')
-    }
-    const date = await res.json()
-    return date
-}
+// export async function getStudyHistoryTag() {
+//     const res = await fetch(`${DB_URL}/studyhistory/summary-by-tag`)
+//     if(!res.ok){
+//         return console.log('エラー発生')
+//     }
+//     const date = await res.json()
+//     return date
+// }
 
-
-export default async function postStudyHistory(pos: StudyHistory) {
+export async function POST(request: NextRequest) {
   const res = await fetch(`${DB_URL}/studyhistory/pos`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(pos),
+    body: JSON.stringify(request),
   });
-  console.log(res)
-  if (!res.ok) {
-    console.log("エラー");
-  }
   const data = await res.json();
-  console.log("登録成功", data);
-  return data;
+  if (!res.ok) {
+  return NextResponse.json({ error }, { status: 500 });
+  }
+  return NextResponse.json({ data }, { status: 200 });
 }

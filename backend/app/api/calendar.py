@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 
 from models.models import Schedule
 from models.settings import engine
-
+from .users import get_current_user
 
 router = APIRouter()
 
@@ -24,7 +24,11 @@ def get_schedule(session: Session = Depends(get_session)):
 
 # 登録
 @router.post("/schedule-registr", response_model=Schedule)
-def schedule_registr(schedule: Schedule, session: Session = Depends(get_session)):
+def schedule_registr(
+    schedule: Schedule,
+    token: str = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
     new_schedule = Schedule(
         title=schedule.title,
         start=schedule.start,

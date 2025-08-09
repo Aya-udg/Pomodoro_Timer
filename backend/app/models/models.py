@@ -4,10 +4,11 @@ from typing import Optional
 
 
 class Timer(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     hour: int | None
     minutes: int = Field(default=25, nullable=True)
     second: int | None
+    user_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
 
 class Schedule(SQLModel, table=True):
@@ -20,6 +21,7 @@ class Schedule(SQLModel, table=True):
     timer: int = Field(nullable=False)
     memo: Optional[str] = Field(default=None, nullable=True)
     color: str = Field(nullable=False)
+    user_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
 
 class StudyHistory(SQLModel, table=True):
@@ -29,6 +31,7 @@ class StudyHistory(SQLModel, table=True):
     duration: int = Field(nullable=False)
     memo: Optional[str]
     tag: Optional[str]
+    user_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
 
 class User(SQLModel, table=True):
@@ -48,7 +51,7 @@ class TokenWithUsername(SQLModel):
 
 # トークンに含まれるデータモデル
 class TokenData(SQLModel):
-    username: Optional[int] = Field(default=None)
+    username: Optional[str] = Field(default=None)
 
 
 # ユーザー登録用のモデル

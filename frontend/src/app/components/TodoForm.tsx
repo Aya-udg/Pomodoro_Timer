@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { TodoFormData, Schedule, UpdateTodoFormData } from "@/app/types/index";
-import postSchedule from "@/lib/postSchedule";
+import { postSchedule } from "@/lib/api/calendar";
 import { useState, useEffect } from "react";
-import updateSchedule from "@/lib/updateSchedule";
-import deleteSchedule from "@/lib/deteleSchedule";
-import getSchedule from "@/lib/getSchedule";
+import { updateSchedule } from "@/lib/api/calendar";
+import { deleteSchedule } from "@/lib/api/calendar";
+import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
 import { format } from "date-fns-tz";
 import { toZonedTime } from "date-fns-tz";

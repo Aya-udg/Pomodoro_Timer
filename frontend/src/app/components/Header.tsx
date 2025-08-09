@@ -8,7 +8,7 @@ export default function Header() {
   const { username, setUsername } = useUserStore();
 
   const logout = async () => {
-    const res = await fetch("/api/logout", {
+    const res = await fetch("/api/auth/logout", {
       method: "POST",
     });
     if (res.ok) {
@@ -35,17 +35,20 @@ export default function Header() {
   return (
     <header className="max-w-[400px] relative">
       <Toaster />
-      <div className="bg-amber-200 p-3 flex justify-between fixed top-0 right-0 left-0">
+      <div className="bg-amber-200 p-3 flex justify-between fixed top-0 right-0 left-0 h-15">
         <h1 className="text-left">ヘッダーです</h1>
         <p>こんにちは：{username ? username : "ゲスト"}さん</p>
         <div>
           <button></button>
         </div>
         <nav>
+          <Link className="mx-10" href="/">
+            TOP
+          </Link>
           <Link className="mx-10" href="/calendar">
             カレンダー
           </Link>
-          <Link className="mx-10" href="/">
+          <Link className="mx-10" href="timer">
             タイマー
           </Link>
           <Link className="mx-10" href="/graph">

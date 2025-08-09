@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -44,7 +46,7 @@
 }
 
 .btn-base {
-  @apply  ml-6 inline-flex h-12 items-center justify-center rounded-md px-6 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95;
+  @apply ml-6 inline-flex h-12 items-center justify-center rounded-md px-6 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95;
 }
 
 .btn-blue {
@@ -135,4 +137,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@theme {
+  --font-dotgothic: "DotGothic16", sans-serif;
 }

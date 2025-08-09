@@ -32,20 +32,19 @@ export default function LoginForm() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const res = await fetch("/api/login", {
+    const res = await fetch("/api/auth/login", {
       method: "POST",
       // URLエンコード形式で送る
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(data),
     });
-
     if (res.ok) {
       const result = await res.json();
       // ログイン成功
       setUsername(result.data.username);
       toast.success("ログインしました！ホーム画面に戻ります");
       setTimeout(() => {
-        router.push("/");
+        router.push("/top");
       }, 1800);
     } else {
       toast.error("認証失敗しましたた");

@@ -7,7 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { CalendarOptions } from "@fullcalendar/core"; // 型をインポート
 import { useEffect, useState } from "react";
 import AddEventDialog from "./AddEventDialog";
-import getSchedule from "@/lib/getSchedule";
+import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
 
 // FullCalendar を動的に読み込む
@@ -32,7 +32,7 @@ export default function MyCalendar() {
         title: item.title,
         start: item.start,
         end: item.end,
-        id: String(item.id),
+        id: item.id,
         color: item.color,
         extendedProps: {
           timer: item.timer,

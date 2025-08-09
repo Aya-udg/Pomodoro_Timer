@@ -2,7 +2,7 @@ import { useTimer } from "react-timer-hook";
 import { useEffect, useState } from "react";
 import { MyTimer } from "@/app/types/index";
 import { StudyHistory } from "@/app/types/index";
-import postStudyHistory from "@/lib/postStudyHistory";
+import postStudyHistory from "@/lib/api/studyHistory";
 import { useUserStore } from "@/app/components/userStore";
 
 export const usePomodoroTimer = (
