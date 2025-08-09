@@ -3,8 +3,6 @@
 import Header from "@/app/components/Header";
 import Link from "next/link";
 
-Header;
-
 export default function app() {
   return (
     <>

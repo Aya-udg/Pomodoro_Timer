@@ -72,11 +72,13 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 # 現在のユーザーを取得する関数
 async def get_current_user(
-    token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)
-):
+    # oauth2_schemeを使ってBearer トークンを抜き取る
+    token: str = Depends(oauth2_scheme),
+    session: Session = Depends(get_session),
+) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="認証を検証できませんでした",
         headers={"WWW-Authenticate": "Bearer"},
     )
     if not token:
@@ -107,7 +109,6 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
-    tags=["users"],
 ):
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:

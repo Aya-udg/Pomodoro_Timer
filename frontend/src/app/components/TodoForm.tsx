@@ -58,12 +58,12 @@ export default function TodoForm({ onOpenChange, onSuccess, onError }: Props) {
 
   // 登録
   const onCreate = async (data: TodoFormData) => {
-    console.log(data);
     const defaultData = {
       ...data,
       timer: 25,
       completed: false,
     };
+    console.log(defaultData);
     await postSchedule(defaultData);
     onOpenChange(false); //ダイアログを閉じる
     reset(); // フォーム初期化

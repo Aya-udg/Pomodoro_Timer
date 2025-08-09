@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
+from sqlalchemy.exc import NoResultFound
 
-from models.models import Schedule
+from models.models import Schedule, User, ScheduleCreate
 from models.settings import engine
-from .users import get_current_user
+from .users import get_current_active_user
 
 router = APIRouter()
 
@@ -16,8 +17,11 @@ def get_session():
 
 # 一覧表示
 @router.get("/schedule")
-def get_schedule(session: Session = Depends(get_session)):
-    statement = select(Schedule)
+def get_schedule(
+    user: User = Depends(get_current_active_user),
+    session: Session = Depends(get_session),
+):
+    statement = select(Schedule).where(Schedule.user_id == user.id)
     results = session.exec(statement).all()
     return results
 
@@ -25,17 +29,21 @@ def get_schedule(session: Session = Depends(get_session)):
 # 登録
 @router.post("/schedule-registr", response_model=Schedule)
 def schedule_registr(
-    schedule: Schedule,
-    token: str = Depends(get_current_user),
+    schedule: ScheduleCreate,
+    # ログインユーザーのデータを取得
+    user: User = Depends(get_current_active_user),
     session: Session = Depends(get_session),
 ):
+    if not user:
+        raise HTTPException(status_code=401, detail="not token")
     new_schedule = Schedule(
+        user_id=user.id,
         title=schedule.title,
         start=schedule.start,
         end=schedule.end,
         completed=schedule.completed,
         timer=schedule.timer,
-        description=schedule.title,
+        description=schedule.description,
         memo=schedule.memo,
         color=schedule.color,
     )
@@ -48,9 +56,18 @@ def schedule_registr(
 # 更新
 @router.put("/schedule-update/{item_id}", response_model=Schedule)
 def schedule_update(
-    item_id: int, updated_schedule: Schedule, session: Session = Depends(get_session)
+    item_id: int,
+    updated_schedule: Schedule,
+    user: User = Depends(get_current_active_user),
+    session: Session = Depends(get_session),
 ):
-    statement = select(Schedule).where(Schedule.id == item_id)
+    statement = (
+        select(Schedule)
+        # 更新対象のアイテムを抽出
+        .where(Schedule.id == item_id)
+        # ログインしているユーザーのデータを抽出
+        .where(Schedule.user_id == user.id)
+    )
     results = session.exec(statement)
     schedule = results.one()
 
@@ -70,12 +87,11 @@ def schedule_update(
 
 
 # 削除
-@router.delete("/schedule-delete/{item_id}", response_model=Schedule)
+@router.delete("/schedule-delete/{item_id}")
 def schedule_delete(item_id: int, session: Session = Depends(get_session)):
     statement = select(Schedule).where(Schedule.id == item_id)
-    results = session.exec(statement)
-    schedule = results.one()
-
-    session.delete(schedule)
+    results = session.exec(statement).first()
+    if not results:
+        raise HTTPException(status_code=404, detail="ページが見つかりません")
+    session.delete(results)
     session.commit()
-    return schedule

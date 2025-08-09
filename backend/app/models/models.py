@@ -26,7 +26,6 @@ class Schedule(SQLModel, table=True):
 
 class StudyHistory(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    username: str = Field(nullable=False)
     date: str = Field(nullable=False)
     duration: int = Field(nullable=False)
     memo: Optional[str]
@@ -63,3 +62,14 @@ class UserCreate(SQLModel):
 # カレントユーザー取得用のモデル
 class UserLogin(SQLModel):
     username: str
+    
+# スケジュール受け取り用モデル
+class ScheduleCreate(SQLModel):
+    title: str
+    start: datetime
+    end: datetime
+    completed: bool
+    description: Optional[str] = None
+    timer: Optional[int] = None
+    memo: Optional[str] = None
+    color: Optional[str] = None
