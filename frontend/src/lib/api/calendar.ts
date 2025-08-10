@@ -1,10 +1,11 @@
 import { TodoFormData } from "@/app/types/index";
 import { Schedule } from "@/app/types/index";
 
-export async function getSchedule(): Promise<Schedule[]> {
+export async function getSchedule() {
   const res = await fetch("/api/calendar", {
     method: "GET",
   });
+  if (res.status === 401) return;
   if (!res.ok) {
     console.error("データの取得に失敗しました", res.status);
     return [];
@@ -21,6 +22,7 @@ export async function postSchedule(data: TodoFormData) {
     },
     body: JSON.stringify(data),
   });
+  if (res.status === 401) return;
   const resData = await res.json();
   return resData;
 }

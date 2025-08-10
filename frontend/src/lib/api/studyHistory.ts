@@ -1,18 +1,12 @@
 import { StudyHistory } from "@/app/types/index";
 
-const DB_URL = process.env.NEXT_PUBLIC_API_URL
-
-export async function getStudyHistoryDay(username:string) {
-    const res = await fetch("/api/study",{
-        method:'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(username)
-    })
-    if(!res.ok){
-        return console.log('エラー発生')
-    }
-    const date = await res.json()
-    return date
+export async function getStudyHistoryDay() {
+  const res = await fetch("/api/study", {
+    method: "GET",
+  });
+  if (!res.ok) return;
+  const date = await res.json();
+  return date;
 }
 
 // export async function getStudyHistoryTag() {
@@ -24,18 +18,14 @@ export async function getStudyHistoryDay(username:string) {
 //     return date
 // }
 
-
-export default async function postStudyHistory(pos: StudyHistory) {
+export default async function postStudyHistory(record: StudyHistory) {
   const res = await fetch("/api/study", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(pos),
+    body: JSON.stringify(record),
   });
-  console.log(res)
-  if (!res.ok) {
-    console.log("エラー");
-  }
-  const data = await res.json();
-  console.log("登録成功", data);
-  return data;
+  console.log(res);
+  if (res.status === 401) return;
+  const resData = await res.json();
+  return resData;
 }

@@ -42,10 +42,10 @@ export default function LoginForm() {
       const result = await res.json();
       // ログイン成功
       setUsername(result.data.username);
-      toast.success("ログインしました！ホーム画面に戻ります");
+      toast.success("ログインしました!TOPページに戻ります");
       setTimeout(() => {
         router.push("/top");
-      }, 1800);
+      }, 1500);
     } else {
       toast.error("認証失敗しましたた");
     }

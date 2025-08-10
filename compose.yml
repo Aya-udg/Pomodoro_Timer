@@ -1,12 +1,14 @@
 services:
     frontend:
-      build:
+      build: ./frontend
       context: .
       environment:
+      restart: always
       NODE_ENV: production
       ports:
         - ${FRONTEND_PORT}:3000
     backend:
+      build: ./backend
       container_name: backend
       restart: always
       volumes:

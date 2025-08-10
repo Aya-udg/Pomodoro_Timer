@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import AddEventDialog from "./AddEventDialog";
 import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
+import { Schedule } from "@/app/types/index";
 
 // FullCalendar を動的に読み込む
 const FullCalendar = dynamic(
@@ -26,22 +27,24 @@ export default function MyCalendar() {
     useSchedule();
 
   const fetchData = async () => {
-    const list = await getSchedule();
-    setEvents(
-      list.map((item) => ({
-        title: item.title,
-        start: item.start,
-        end: item.end,
-        id: item.id,
-        color: item.color,
-        extendedProps: {
-          timer: item.timer,
-          completed: item.completed,
-          description: item.description,
-          memo: item.memo,
-        },
-      }))
-    );
+    const res = await getSchedule();
+    if (res) {
+      setEvents(
+        res.map((item: Schedule) => ({
+          title: item.title,
+          start: item.start,
+          end: item.end,
+          id: item.id,
+          color: item.color,
+          extendedProps: {
+            timer: item.timer,
+            completed: item.completed,
+            description: item.description,
+            memo: item.memo,
+          },
+        }))
+      );
+    }
   };
 
   useEffect(() => {

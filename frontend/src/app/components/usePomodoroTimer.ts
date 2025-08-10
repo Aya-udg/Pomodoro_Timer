@@ -49,7 +49,7 @@ export const usePomodoroTimer = (
   const endTimer = async () => {
     const posdate: StudyHistory = {
       date: date,
-      duration: workTime,
+      duration:workTime,
       username: username!,
     };
     console.log("現在のタイマータイプ:", timerType, posdate);

@@ -1,8 +1,9 @@
 from fastapi import HTTPException, Depends, APIRouter, status
 from sqlmodel import Session, select
 from models.settings import engine
-from models.models import Timer, StudyHistory
+from models.models import Timer, StudyHistory, User
 from sqlalchemy import func
+from .users import get_current_active_user
 
 
 # 依存関係作成
@@ -25,12 +26,16 @@ def read_timer_settings(session: Session = Depends(get_session)):
 
 
 # 同日の勉強データをまとめた勉強データの取得
-@router.post("/studyhistory/summary-by-date")
-def read_study_history_day(session: Session = Depends(get_session)):
+@router.get("/studyhistory/summary-by-date")
+def read_study_history_day(
+    session: Session = Depends(get_session),
+    user: User = Depends(get_current_active_user),
+):
     statement = (
         select(
             StudyHistory.date, func.sum(StudyHistory.duration).label("total_minutes")
         )
+        .where(StudyHistory.user_id == user.id)
         .group_by(StudyHistory.date)
         .order_by(StudyHistory.date)
     )
@@ -44,10 +49,14 @@ def read_study_history_day(session: Session = Depends(get_session)):
 
 # タグごとにまとめた勉強データの取得
 @router.post("/studyhistory/summary-by-tag")
-def read_study_history_tag(username: str, session: Session = Depends(get_session)):
+def read_study_history_tag(
+    username: str,
+    session: Session = Depends(get_session),
+    user: User = Depends(get_current_active_user),
+):
     statement = (
         select(StudyHistory.tag, func.sum(StudyHistory.duration).label("total_minutes"))
-        .where(StudyHistory.username == username)
+        .where(StudyHistory.user_id == user.id)
         .group_by(StudyHistory.tag)
     )
     results = session.exec(statement).all()
@@ -60,9 +69,20 @@ def read_study_history_tag(username: str, session: Session = Depends(get_session
 
 # 勉強データ追加
 @router.post("/studyhistory/pos", response_model=StudyHistory)
-def add_study_history(history: StudyHistory, session: Session = Depends(get_session)):
-    session.add(history)
+def add_study_history(
+    history: StudyHistory,
+    session: Session = Depends(get_session),
+    user: User = Depends(get_current_active_user),
+):
+    data = StudyHistory(
+        date=history.date,
+        duration=history.duration,
+        memo=history.memo,
+        tag=history.tag,
+        user_id=user.id,
+    )
+    session.add(data)
     session.commit()
     # これ大事
-    session.refresh(history)
+    session.refresh(data)
     return history

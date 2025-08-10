@@ -64,11 +64,15 @@ export default function TodoForm({ onOpenChange, onSuccess, onError }: Props) {
       completed: false,
     };
     console.log(defaultData);
-    await postSchedule(defaultData);
+    const res = await postSchedule(defaultData);
     onOpenChange(false); //ダイアログを閉じる
     reset(); // フォーム初期化
-    await getSchedule();
-    onSuccess("登録しました");
+    if (res) {
+      await getSchedule();
+      onSuccess("登録しました");
+    } else {
+      onError("ログインしてください");
+    }
   };
 
   // 削除

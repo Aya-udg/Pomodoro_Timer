@@ -13,6 +13,8 @@ export default function ChartClient({
 }: {
   studydata: StudyHistory[];
 }) {
+
+
   const [studyHistory] = useState<StudyHistory[]>(studydata);
   //  選択した日
   const [choiceDay, setChoiceDay] = useState<Date>(new Date());

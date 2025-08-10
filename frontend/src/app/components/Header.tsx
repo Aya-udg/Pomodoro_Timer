@@ -3,17 +3,23 @@ import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import { useUserStore } from "@/app/components/userStore";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { username, setUsername } = useUserStore();
+
+  const router = useRouter();
 
   const logout = async () => {
     const res = await fetch("/api/auth/logout", {
       method: "POST",
     });
     if (res.ok) {
-      toast.success("ログアウトしました！");
+      toast.success("ログアウトしました!TOPページに戻ります");
       setUsername("");
+      setTimeout(() => {
+        router.push("/top");
+      }, 1500);
     } else {
       toast.error("ログインしていません");
     }
@@ -24,8 +30,11 @@ export default function Header() {
       const res = await fetch("/api/currentuser", {
         method: "GET",
       });
-      const result = await res.json();
+      // ログインしていないときは何もしない
+      if (res.status === 401) return;
+
       if (res.ok) {
+        const result = await res.json();
         setUsername(result.data.username);
       }
     };

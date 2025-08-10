@@ -1,4 +1,4 @@
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
@@ -18,6 +18,8 @@ def get_session():
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+REFRESH_TOKEN_EXPIRE_DAYS = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS")
+
 
 # パスワードのハッシュ化に使用するコンテキスト
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -25,6 +27,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # このURLにユーザー名とパスワードが送信される
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+def credentials_exception(code: str):
+    HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail={"message": "認証に失敗しました", "code": code},
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
 
 router = APIRouter()
 
@@ -70,30 +81,38 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
+# リフレッシュトークンの生成関数
+def create_refresh_token(data: dict, expires_delta: timedelta):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
 # 現在のユーザーを取得する関数
 async def get_current_user(
     # oauth2_schemeを使ってBearer トークンを抜き取る
     token: str = Depends(oauth2_scheme),
     session: Session = Depends(get_session),
 ) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="認証を検証できませんでした",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+
     if not token:
-        raise HTTPException(status_code=401, detail="not token")
+        raise credentials_exception("user_not_found")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-        token_data = TokenData(username=username)
+    except ExpiredSignatureError:
+        raise credentials_exception("トークンの有効期限切れです")
     except JWTError:
-        raise credentials_exception
+        raise credentials_exception("無効なアクセスです")
+    username: str = payload.get("sub")
+    if not username:
+        raise credentials_exception("不正なトークンです")
+    token_data = TokenData(username=username)
     user = get_user(token_data.username, session)
-    if user is None:
-        raise credentials_exception
+    # 登録していないユーザー
+    if not user:
+        raise credentials_exception("ユーザーが見つかりません")
     return user
 
 
@@ -104,25 +123,28 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     return current_user
 
 
-# アクセストークンを取得するためのエンドポイント
+# トークンを取得するためのエンドポイント
 @router.post("/token")
-async def login_for_access_token(
+async def login_for_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
 ):
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise credentials_exception("ユーザー名かパスワード違います")
     access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
+    refresh_token_expires = timedelta(days=int(REFRESH_TOKEN_EXPIRE_DAYS))
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    refresh_token = create_refresh_token(
+        data={"sub": user.username}, expires_delta=refresh_token_expires
+    )
     return TokenWithUsername(
-        access_token=access_token, token_type="bearer", username=user.username
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer",
+        username=user.username,
     )
 
 

@@ -45,6 +45,7 @@ class User(SQLModel, table=True):
 class TokenWithUsername(SQLModel):
     access_token: str
     token_type: str
+    refresh_token: str
     username: str
 
 
@@ -62,7 +63,8 @@ class UserCreate(SQLModel):
 # カレントユーザー取得用のモデル
 class UserLogin(SQLModel):
     username: str
-    
+
+
 # スケジュール受け取り用モデル
 class ScheduleCreate(SQLModel):
     title: str
