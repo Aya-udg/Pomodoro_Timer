@@ -30,7 +30,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def credentials_exception(code: str):
-    HTTPException(
+    raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail={"message": "認証に失敗しました", "code": code},
         headers={"WWW-Authenticate": "Bearer"},
@@ -98,21 +98,21 @@ async def get_current_user(
 ) -> User:
 
     if not token:
-        raise credentials_exception("user_not_found")
+        credentials_exception("user_not_found")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except ExpiredSignatureError:
-        raise credentials_exception("トークンの有効期限切れです")
+        credentials_exception("トークンの有効期限切れです")
     except JWTError:
-        raise credentials_exception("無効なアクセスです")
+        credentials_exception("無効なアクセスです")
     username: str = payload.get("sub")
     if not username:
-        raise credentials_exception("不正なトークンです")
+        credentials_exception("不正なトークンです")
     token_data = TokenData(username=username)
     user = get_user(token_data.username, session)
     # 登録していないユーザー
     if not user:
-        raise credentials_exception("ユーザーが見つかりません")
+        credentials_exception("ユーザーが見つかりません")
     return user
 
 
@@ -131,7 +131,7 @@ async def login_for_token(
 ):
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
-        raise credentials_exception("ユーザー名かパスワード違います")
+        credentials_exception("ユーザー名かパスワード違います")
     access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     refresh_token_expires = timedelta(days=int(REFRESH_TOKEN_EXPIRE_DAYS))
     access_token = create_access_token(

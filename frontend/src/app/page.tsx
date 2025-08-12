@@ -1,20 +1,26 @@
-"use client";
-
-import Header from "@/app/components/Header";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function app() {
   return (
     <>
       <div className="mt-20">
-        <div className="flex">
-          <h1 className="font-dotgothic text-3xl">
+        <div className="">
+          <h1 className="font-dotgothic text-3xl text-center">
             キャラクターと一緒に成長するアプリ
           </h1>
         </div>
-        <Link className="mx-10" href="/top">
-          <button>入る</button>
-        </Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 place-items-center m-5">
+          <Image src="/sample.png" alt="logo" width={300} height={300} />
+          <Image src="/sample.png" alt="logo" width={300} height={300} />
+          <Image src="/sample.png" alt="logo" width={300} height={300} />
+        </div>
+        <button className="group relative w-35 h-12 overflow-hidden rounded-md bg-blue-500 px-6 text-neutral-50 transition">
+          <Link href="/top">
+            <span className="font-dotgothic">使ってみる</span>
+            <div className="absolute inset-0 h-full w-0 bg-white/30 transition-[width] group-hover:w-full"></div>
+          </Link>
+        </button>
       </div>
     </>
   );

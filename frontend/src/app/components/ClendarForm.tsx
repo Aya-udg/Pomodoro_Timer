@@ -16,7 +16,11 @@ type Props = {
   onError: (msg: string) => void;
 };
 
-export default function TodoForm({ onOpenChange, onSuccess, onError }: Props) {
+export default function ClendarForm({
+  onOpenChange,
+  onSuccess,
+  onError,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -65,6 +69,7 @@ export default function TodoForm({ onOpenChange, onSuccess, onError }: Props) {
     };
     console.log(defaultData);
     const res = await postSchedule(defaultData);
+    console.log(res);
     onOpenChange(false); //ダイアログを閉じる
     reset(); // フォーム初期化
     if (res) {

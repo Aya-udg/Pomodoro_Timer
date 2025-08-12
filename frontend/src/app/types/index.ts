@@ -29,6 +29,11 @@ export type TodoFormData = {
   color: string;
 };
 
+export type Chat = {
+  message: string;
+  date: string;
+};
+
 export type UpdateTodoFormData = TodoFormData & {
   id: string;
   description: string;

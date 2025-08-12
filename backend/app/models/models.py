@@ -33,6 +33,14 @@ class StudyHistory(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
 
+class Chats(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    message: str = Field(nullable=False)
+    response: str = Field(nullable=False)
+    date: str = Field(nullable=False)
+    user_id: Optional[int] = Field(default=None, foreign_key="users.id")
+
+
 class User(SQLModel, table=True):
     __tablename__ = "users"
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -75,3 +83,9 @@ class ScheduleCreate(SQLModel):
     timer: Optional[int] = None
     memo: Optional[str] = None
     color: Optional[str] = None
+
+
+# AIチャットのモデル
+class AIRequest(SQLModel):
+    message: str
+    date: str

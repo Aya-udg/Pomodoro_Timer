@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from sqlalchemy.exc import NoResultFound
 
 from models.models import Schedule, User, ScheduleCreate
 from models.settings import engine
@@ -34,8 +33,6 @@ def schedule_registr(
     user: User = Depends(get_current_active_user),
     session: Session = Depends(get_session),
 ):
-    if not user:
-        raise HTTPException(status_code=401, detail="not token")
     new_schedule = Schedule(
         user_id=user.id,
         title=schedule.title,
