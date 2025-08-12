@@ -34,6 +34,14 @@ export type Chat = {
   date: string;
 };
 
+export type ChatHistory = {
+  id: number;
+  user_id: number;
+  response: string;
+  message: string;
+  date: string;
+};
+
 export type UpdateTodoFormData = TodoFormData & {
   id: string;
   description: string;

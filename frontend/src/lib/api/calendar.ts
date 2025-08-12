@@ -10,8 +10,8 @@ export async function getSchedule() {
     console.error("データの取得に失敗しました", res.status);
     return [];
   }
-  const resData = await res.json();
-  return resData;
+  const result = await res.json();
+  return result;
 }
 
 export async function postSchedule(data: TodoFormData) {

@@ -12,14 +12,23 @@ export default function app() {
 
   useEffect(() => {
     const fecthData = async () => {
-      const data = await getStudyHistoryDay();
-      if (!data) {
-        toast.error("ログインしてください");
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
+      const res = await getStudyHistoryDay();
+      const result = await res.json();
+      console.log(result);
+      if (res.status === 401) {
+        if (result.error === "トークンの有効期限切れです") {
+          toast.error(result.erro);
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500);
+        } else if (result.error === "ユーザーが見つかりません") {
+          toast.error("ログインしてください");
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500);
+        }
       } else {
-        setStudydata(data.data);
+        setStudydata(result.data);
       }
     };
     fecthData();

@@ -1,10 +1,19 @@
-export default function Posts() {
+import { Chat, ChatHistory } from "@/app/types/index";
+
+type props = {
+  chats: ChatHistory[];
+};
+export default function Posts({ chats }: props) {
   return (
     <section className="flex justify-center items-center flex-col">
-      <p>1</p>
-      <p>2</p>
-      <p>3</p>
-      <p>4</p>
+      <p>
+        {chats?.map((chat) => (
+          <ul>
+            <p className="text-right">{chat.message}</p>
+            <li className="mb-10">{chat.response}</li>
+          </ul>
+        ))}
+      </p>
     </section>
   );
 }

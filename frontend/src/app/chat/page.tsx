@@ -9,7 +9,6 @@ export default function Home() {
       <div className="pt-25">
         <h1 className="text-center text-5xl">メッセージ</h1>
         <p>投稿一覧</p>
-        <Posts></Posts>
         <div className="flex justify-center">
           <PostForm></PostForm>
         </div>

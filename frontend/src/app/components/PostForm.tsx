@@ -3,13 +3,17 @@ import { Textarea } from "@/app/components/ui/textarea";
 import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Chat } from "@/app/types/index";
-import postChat from "@/lib/api/chat";
+import { Chat, ChatHistory } from "@/app/types/index";
+import { postChat, getChat } from "@/lib/api/chat";
 import { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Posts from "./Posts";
 
 export default function PostForm() {
   const { register, handleSubmit, reset, formState } = useForm<Chat>();
-  const [chats, setChats] = useState<Chat[]>([]);
+  const [chats, setChats] = useState<ChatHistory[]>([]);
+  const router = useRouter();
 
   const today = new Date();
   const date = today.toLocaleDateString();
@@ -19,21 +23,22 @@ export default function PostForm() {
       ...message,
       date: date,
     };
-    const res = await postChat(request);
+    await postChat(request);
     reset();
-    setChats([res.date, res.message, res.response]);
+    const chats = await getChat();
+    setChats([...chats.data]);
   };
 
   useEffect(() => {
     const fecthData = async () => {
-      const data = await getStudyHistoryDay();
-      if (!data) {
+      const res = await getChat();
+      if (!res) {
         toast.error("ログインしてください");
         setTimeout(() => {
           router.push("/login");
         }, 1500);
       } else {
-        setStudydata(data.data);
+        setChats([...res.data]);
       }
     };
     fecthData();
@@ -42,6 +47,7 @@ export default function PostForm() {
   return (
     <>
       <div className="grid gap-3 w-3/5">
+        <Posts chats={chats} />
         <Label htmlFor="message">メッセージ</Label>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Textarea
