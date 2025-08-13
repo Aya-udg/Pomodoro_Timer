@@ -10,6 +10,8 @@ import AddEventDialog from "./AddEventDialog";
 import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
 import { Schedule } from "@/app/types/index";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/app/components/userStore";
 
 // FullCalendar を動的に読み込む
 const FullCalendar = dynamic(
@@ -26,11 +28,22 @@ export default function MyCalendar() {
   const { events, setEvents, setSelectedEvent, setSelectedDate } =
     useSchedule();
 
+  const { username } = useUserStore();
+  const router = useRouter();
+
   const fetchData = async () => {
     const res = await getSchedule();
-    if (res) {
+    if (res.status === 401) {
+      if (res.error === "トークンの有効期限切れです") {
+        toast.error(res.error);
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
+      }
+    }
+    if (res.data) {
       setEvents(
-        res.map((item: Schedule) => ({
+        res.data.map((item: Schedule) => ({
           title: item.title,
           start: item.start,
           end: item.end,
@@ -60,6 +73,12 @@ export default function MyCalendar() {
     businessHours: true,
 
     dateClick: (e) => {
+      if (!username) {
+        toast.error("ログインしてください");
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
+      }
       // クリックした日付の文字列が入る
       setSelectedEvent(null);
       setSelectedDate(e.dateStr);
@@ -80,7 +99,6 @@ export default function MyCalendar() {
         memo: event.extendedProps.memo,
       };
       setSelectedEvent(selected);
-      console.log(selected);
       setSelectedDate(selected.start);
       setOpen(true);
     },

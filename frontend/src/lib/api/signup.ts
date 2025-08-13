@@ -6,11 +6,8 @@ export default async function singup({username,password}:FormValues){
         headers:{'Content-Type': 'application/json'},
         body:JSON.stringify({username,password})
     })
-    if(res.ok){
-        const data = await res.json();
-        return data
-    }else{
-        const error = await res.json()
-        return error
-    }
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status,error:result.error};
+  return result;
 }

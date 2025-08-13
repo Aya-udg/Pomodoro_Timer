@@ -40,10 +40,9 @@ export default function Header() {
         method: "GET",
       });
       // ログインしていないときは何もしない
+      const result = await res.json();
       if (res.status === 401) return;
-
       if (res.ok) {
-        const result = await res.json();
         setUsername(result.data.username);
       }
     };

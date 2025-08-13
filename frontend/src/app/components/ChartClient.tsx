@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SimpleLineChart, TwoLevelPieChart } from "@/app/components/Chart";
 import { StudyHistory } from "@/app/types/index";
 import {
@@ -7,15 +7,14 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { getStudyHistoryDay } from "@/lib/api/studyHistory";
+import toast, { Toaster } from "react-hot-toast";
+import { useLoginStore } from "@/app/components/userStore";
 
-export default function ChartClient({
-  studydata,
-}: {
-  studydata: StudyHistory[];
-}) {
+export default function ChartClient() {
+  const [studydata, setStudydata] = useState<StudyHistory[]>([]);
 
-
-  const [studyHistory] = useState<StudyHistory[]>(studydata);
   //  選択した日
   const [choiceDay, setChoiceDay] = useState<Date>(new Date());
 
@@ -23,14 +22,29 @@ export default function ChartClient({
     const selectday = new Date(e.target.value);
     setChoiceDay(selectday);
   };
-  console.log(studyHistory);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fecthData = async () => {
+      const res = await getStudyHistoryDay();
+      if (res.status === 401) {
+        toast.error(res.error);
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
+      }
+      setStudydata(res.data);
+    };
+    fecthData();
+  }, []);
 
   // ユーザーが選択した日の1週間前の日付を取得
   const oneWeekAgo = new Date(choiceDay);
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
   // 今週の勉強時間
-  const weekStudyHistory = studyHistory.filter((v) => {
+  const weekStudyHistory = studydata.filter((v) => {
     const date = new Date(v.date);
     return oneWeekAgo <= date && date <= choiceDay;
   });
@@ -38,6 +52,7 @@ export default function ChartClient({
 
   return (
     <>
+      <Toaster />
       <DropdownMenu>
         <DropdownMenuTrigger>日付の設定</DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -60,14 +75,14 @@ export default function ChartClient({
         </div>
       </div>
       <div className="flex">
-        {studyHistory && (
+        {studydata && (
           <SimpleLineChart
             oneWeekAgo={oneWeekAgo}
             choiceDay={choiceDay}
-            studydata={studyHistory}
+            studydata={studydata}
           />
         )}
-        {studyHistory && <TwoLevelPieChart />}
+        {studydata && <TwoLevelPieChart />}
       </div>
     </>
   );
