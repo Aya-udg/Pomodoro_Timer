@@ -32,8 +32,8 @@ export default function PostForm() {
   useEffect(() => {
     const fecthData = async () => {
       const res = await getChat();
-      if (!res) {
-        toast.error("ログインしてください");
+      if (res.status === 401) {
+        toast.error(res.error);
         setTimeout(() => {
           router.push("/login");
         }, 1500);
@@ -47,6 +47,7 @@ export default function PostForm() {
   return (
     <>
       <div className="grid gap-3 w-3/5">
+        <Toaster />
         <Posts chats={chats} />
         <Label htmlFor="message">メッセージ</Label>
         <form onSubmit={handleSubmit(onSubmit)}>

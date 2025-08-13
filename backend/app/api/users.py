@@ -98,7 +98,7 @@ async def get_current_user(
 ) -> User:
 
     if not token:
-        credentials_exception("user_not_found")
+        credentials_exception("ユーザーが見つかりません")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except ExpiredSignatureError:

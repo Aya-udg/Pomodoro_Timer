@@ -8,7 +8,10 @@ export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   if (!token) {
-    return NextResponse.json({ error: "ユーザーが見つかりません" }, { status: 401 });
+    return NextResponse.json(
+      { error: "ログインしていません" },
+      { status: 401 }
+    );
   }
   const res = await fetch(`${DB_URL}/studyhistory/summary-by-date`, {
     method: "GET",
@@ -32,13 +35,15 @@ export async function GET() {
   return NextResponse.json({ data }, { status: 200 });
 }
 
-
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-  const record = await request.json()
+  const record = await request.json();
   if (!token) {
-    return NextResponse.json({ error: "認証されていません" }, { status: 401 });
+    return NextResponse.json(
+      { error: "ログインしていません" },
+      { status: 401 }
+    );
   }
   const res = await fetch(`${DB_URL}/studyhistory/pos`, {
     method: "POST",

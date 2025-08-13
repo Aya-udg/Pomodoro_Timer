@@ -4,9 +4,12 @@ export async function getStudyHistoryDay() {
   const res = await fetch("/api/study", {
     method: "GET",
   });
-  if (res.status === 401) return res;
-  return await res.json();;
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status,error:result.error};
+  return result;
 }
+
 
 
 export default async function postStudyHistory(record: StudyHistory) {
@@ -15,8 +18,8 @@ export default async function postStudyHistory(record: StudyHistory) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(record),
   });
-  console.log(res);
-  if (res.status === 401) return res;
-  const resData = await res.json();
-  return resData;
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status,error:result.error};
+  return result;
 }

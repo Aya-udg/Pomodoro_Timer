@@ -8,9 +8,10 @@ export async function postChat(chat: Chat) {
     },
     body: JSON.stringify(chat),
   });
-  if (res.status === 401) return;
-  const resData = await res.json();
-  return resData;
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status,error:result.error};
+  return result;
 }
 
 export async function getChat() {
@@ -19,7 +20,8 @@ export async function getChat() {
       "Content-Type": "application/json",
     },
   });
-  if (res.status === 401) return;
-  const resData = await res.json();
-  return resData;
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status,error:result.error};
+  return result;
 }

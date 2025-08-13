@@ -8,8 +8,8 @@ export async function GET() {
   const token = cookieStore.get("token")?.value;
   if (!token) {
     return NextResponse.json(
-      { message: "認証に失敗しました", code: "no_token" },
-      { status: 401, headers: { "WWW-Authenticate": "Bearer" } }
+      { error: "ログインしていません" },
+      { status: 401 }
     );
   }
   const res = await fetch(`${DB_URL}/users/me/`, {

@@ -58,7 +58,7 @@ def get_chat(
     statement = (
         select(Chats)
         .where(Chats.user_id == user.id)
-        .order_by(Chats.date.desc())
+        .order_by(Chats.id.desc())
         .limit(10)
     )
     results = session.exec(statement).all()
