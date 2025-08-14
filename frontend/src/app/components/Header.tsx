@@ -41,6 +41,7 @@ export default function Header() {
       });
       // ログインしていないときは何もしない
       const result = await res.json();
+      console.log(result);
       if (res.status === 401) return;
       if (res.ok) {
         setUsername(result.data.username);
@@ -54,8 +55,8 @@ export default function Header() {
       <header className="relative">
         <Toaster />
         <div className="hidden md:block border border-b-3 bg-neutral-50 p-3 justify-between fixed top-0 right-0 left-0 h-15">
-          <div className="flex justify-between">
-            <h1 className="text-left">ロゴ</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-left items-center">ロゴ</h1>
             <p className="responsive-text">
               こんにちは：{username ? username : "ゲスト"}さん
             </p>

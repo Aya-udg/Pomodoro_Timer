@@ -25,6 +25,7 @@ export default function ChartClient() {
 
   const router = useRouter();
 
+  // トークンの有効期限が切れたときに再ログインを促す
   useEffect(() => {
     const fecthData = async () => {
       const res = await getStudyHistoryDay();
@@ -53,36 +54,39 @@ export default function ChartClient() {
   return (
     <>
       <Toaster />
-      <DropdownMenu>
-        <DropdownMenuTrigger>日付の設定</DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <p>開始日を選んでください</p>
-          <input type="date" onChange={handleChange} />
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <div className="flex">
-        <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-          <p className="text-center">週の集中時間</p>
-          <p className="text-2xl text-center text-blue-700">
-            {Math.floor(data / 3600)}時間{Math.floor(data / 60) % 60}分
-          </p>
+      <div className="pt-10 sm:pt-30">
+        <div className="flex justify-center mb-10">
+          <DropdownMenu>
+            <DropdownMenuTrigger>日付の設定</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <p>見たい日を選んでください</p>
+              <input type="date" onChange={handleChange} />
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-          <p className="text-center">月の集中時間</p>
-          <p className="text-2xl text-center text-blue-700 ">
-            {Math.floor(data / 3600)}時間{Math.floor(data / 60) % 60}分
-          </p>
+        <div className="flex justify-center mb-10">
+          <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+            <p className="text-center">週の集中時間</p>
+            <p className="text-2xl text-center text-blue-700">
+              {Math.floor(data / 3600)}時間{Math.floor(data / 60) % 60}分
+            </p>
+          </div>
+          <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+            <p className="text-center">月の集中時間</p>
+            <p className="text-2xl text-center text-blue-700 ">
+              {Math.floor(data / 3600)}時間{Math.floor(data / 60) % 60}分
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="flex">
-        {studydata && (
-          <SimpleLineChart
-            oneWeekAgo={oneWeekAgo}
-            choiceDay={choiceDay}
-            studydata={studydata}
-          />
-        )}
-        {studydata && <TwoLevelPieChart />}
+        <div className="flex justify-center">
+          {studydata && (
+            <SimpleLineChart
+              oneWeekAgo={oneWeekAgo}
+              choiceDay={choiceDay}
+              studydata={studydata}
+            />
+          )}
+        </div>
       </div>
     </>
   );
