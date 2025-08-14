@@ -38,7 +38,7 @@ export default function app() {
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center mx-auto pt-25">
+      <div className="flex flex-col items-center justify-center mx-auto pt-10 sm:pt-30">
         <TimerDisplay {...timer} />
         <DropdownMenu>
           <DropdownMenuTrigger className="mt-10 py-2 px-5 bg-sky-500 transition hover:bg-sky-600 rounded-2xl text-white font-black">
