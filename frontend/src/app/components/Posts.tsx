@@ -12,10 +12,17 @@ export default function Posts({ chats }: props) {
     <section className="flex justify-center items-center flex-col">
       <div>
         {reversChats?.map((chat) => (
-          <ul key={chat.id}>
-            <p className="text-right">{chat.message}</p>
-            <li className="mb-10">{chat.response}</li>
-          </ul>
+          <div key={chat.id}>
+            <div className="text-right my-15">
+              <p className="border-amber-100 bg-amber-100 rounded-3xl inline-block py-4 px-8">
+                {chat.message}
+              </p>
+            </div>
+            <div className="flex border-b pb-8">
+              <div>画像</div>
+              <p className="">{chat.response}</p>
+            </div>
+          </div>
         ))}
       </div>
     </section>

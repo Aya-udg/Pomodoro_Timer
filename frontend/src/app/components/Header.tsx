@@ -41,6 +41,7 @@ export default function Header() {
       });
       // ログインしていないときは何もしない
       const result = await res.json();
+      console.log(result);
       if (res.status === 401) return;
       if (res.ok) {
         setUsername(result.data.username);
@@ -51,60 +52,69 @@ export default function Header() {
 
   return (
     <>
-      <header className="max-w-[400px] relative">
+      <header className="relative">
         <Toaster />
-        <div className="hidden sm:block border border-b-3 bg-neutral-50 p-3 justify-between fixed top-0 right-0 left-0 h-15">
-          <div className="flex">
-            <h1 className="text-left">ロゴ</h1>
-            <p>こんにちは：{username ? username : "ゲスト"}さん</p>
+        <div className="hidden md:block border border-b-3 bg-neutral-50 p-3 justify-between fixed top-0 right-0 left-0 h-15">
+          <div className="flex justify-between items-center">
+            <h1 className="text-left items-center">ロゴ</h1>
+            <p className="responsive-text">
+              こんにちは：{username ? username : "ゲスト"}さん
+            </p>
             <nav>
               <button>
-                <Link className="mx-10" href="/top">
+                <Link className="responsive-text mx-5" href="/top">
                   TOP
                 </Link>
               </button>
               <button>
-                <Link className="mx-10" href="/calendar">
+                <Link className="responsive-text mx-5" href="/calendar">
                   カレンダー
                 </Link>
               </button>
               <button>
-                <Link className="mx-10" href="/timer">
+                <Link className="responsive-text mx-5" href="/timer">
                   タイマー
                 </Link>
               </button>
               <button>
-                <Link className="mx-10" href="/graph">
+                <Link className="responsive-text mx-5" href="/graph">
                   グラフ
                 </Link>
               </button>
               <button>
-                <Link className="mx-10" href="/chat">
+                <Link className="responsive-text mx-5" href="/chat">
                   チャット
                 </Link>
               </button>
               <button>
-                <Link className="mx-10" href="/login">
+                <Link
+                  className="responsive-text mx-5 inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 bg-blue-600"
+                  href="/login"
+                >
                   ログイン
                 </Link>
               </button>
+              <button
+                className="responsive-text inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 btn-red"
+                onClick={logout}
+              >
+                ログアウト
+              </button>
             </nav>
-            <button onClick={logout}>ログアウト</button>
           </div>
         </div>
-
-        <div className="sm:hidden flex justify-end ">
+        <div className="md:hidden flex justify-end">
           <button>
-            <Link className="mx-5" href="/top">
+            <Link className="mx-3 text-s" href="/top">
               TOP
             </Link>
           </button>
           <button>
-            <Link className="mx-5" href="/login">
+            <Link className="mx-5 text-s" href="/login">
               ログイン
             </Link>
           </button>
-          <button className="mr-15 mx-5" onClick={logout}>
+          <button className="pr-10 text-s" onClick={logout}>
             ログアウト
           </button>
           <Sheet>
@@ -121,25 +131,33 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-60">
               <SheetHeader>
-                <SheetTitle>メニュー</SheetTitle>
-                <SheetDescription>リンクを選んでね</SheetDescription>
+                <SheetTitle className="text-center">メニュー</SheetTitle>
+                <SheetDescription></SheetDescription>
               </SheetHeader>
               <nav className="grid grid-cols-1">
-                <Link className="mx-10" href="/calendar">
-                  カレンダー
-                </Link>
-                <Link className="mx-10" href="/timer">
-                  タイマー
-                </Link>
-                <Link className="mx-10" href="/graph">
-                  グラフ
-                </Link>
-                <Link className="mx-10" href="/chat">
-                  チャット
-                </Link>
-                <Link className="mx-10" href="/login">
-                  ログイン
-                </Link>
+                <button className="mx-10">
+                  <Link
+                    className="py-2 px-5 border rounded-full"
+                    href="/calendar"
+                  >
+                    カレンダー
+                  </Link>
+                </button>
+                <button className="mt-10">
+                  <Link className="py-2 px-5 border rounded-full" href="/timer">
+                    タイマー
+                  </Link>
+                </button>
+                <button className="mt-10">
+                  <Link className="py-2 px-5 border rounded-full" href="/graph">
+                    グラフ
+                  </Link>
+                </button>
+                <button className="mt-10">
+                  <Link className="py-2 px-5 border rounded-full" href="/chat">
+                    チャット
+                  </Link>
+                </button>
               </nav>
             </SheetContent>
           </Sheet>

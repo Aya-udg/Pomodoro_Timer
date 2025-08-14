@@ -56,7 +56,7 @@ export default function LoginForm() {
       <div>
         <Toaster />
       </div>
-      <div className="flex  items-center mx-auto justify-center max-w-sm pt-30">
+      <div className="flex items-center mx-auto justify-center max-w-sm pt-10 sm:pt-30">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>

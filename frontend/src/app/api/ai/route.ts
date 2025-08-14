@@ -38,7 +38,6 @@ export async function GET() {
     return NextResponse.json(
       { error: "ログインしていません" },
       { status: 401 }
-    
     );
   }
   const res = await fetch(`${DB_URL}/chats_history`, {
