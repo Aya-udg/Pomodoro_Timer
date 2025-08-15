@@ -36,14 +36,11 @@ export default function Header() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/currentuser", {
-        method: "GET",
-      });
+      const res = await fetch("/api/currentuser");
       // ログインしていないときは何もしない
-      const result = await res.json();
-      console.log(result);
       if (res.status === 401) return;
       if (res.ok) {
+        const result = await res.json();
         setUsername(result.data.username);
       }
     };
@@ -54,66 +51,50 @@ export default function Header() {
     <>
       <header className="relative">
         <Toaster />
-        <div className="hidden md:block border border-b-3 bg-neutral-50 p-3 justify-between fixed top-0 right-0 left-0 h-15">
+        <div className="hidden md:block border  bg-[#FFFFF4] border-b-2  p-3 justify-between fixed top-0 right-0 left-0 h-15">
           <div className="flex justify-between items-center">
             <h1 className="text-left items-center">ロゴ</h1>
             <p className="responsive-text">
               こんにちは：{username ? username : "ゲスト"}さん
             </p>
             <nav>
-              <button>
-                <Link className="responsive-text mx-5" href="/top">
-                  TOP
-                </Link>
-              </button>
-              <button>
-                <Link className="responsive-text mx-5" href="/calendar">
-                  カレンダー
-                </Link>
-              </button>
-              <button>
-                <Link className="responsive-text mx-5" href="/timer">
-                  タイマー
-                </Link>
-              </button>
-              <button>
-                <Link className="responsive-text mx-5" href="/graph">
-                  グラフ
-                </Link>
-              </button>
-              <button>
-                <Link className="responsive-text mx-5" href="/chat">
-                  チャット
-                </Link>
-              </button>
-              <button>
+              <Link className="responsive-text mx-5" href="/timer">
+                TOP
+              </Link>
+              <Link className="responsive-text mx-5" href="/calendar">
+                カレンダー
+              </Link>
+              <Link className="responsive-text mx-5" href="/graph">
+                グラフ
+              </Link>
+              <Link className="responsive-text mx-5" href="/chat">
+                チャット
+              </Link>
+              {username ? (
+                <button
+                  className="responsive-text inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 btn-red"
+                  onClick={logout}
+                >
+                  ログアウト
+                </button>
+              ) : (
                 <Link
                   className="responsive-text mx-5 inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 bg-blue-600"
                   href="/login"
                 >
                   ログイン
                 </Link>
-              </button>
-              <button
-                className="responsive-text inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 btn-red"
-                onClick={logout}
-              >
-                ログアウト
-              </button>
+              )}
             </nav>
           </div>
         </div>
-        <div className="md:hidden flex justify-end">
-          <button>
-            <Link className="mx-3 text-s" href="/top">
-              TOP
-            </Link>
-          </button>
-          <button>
-            <Link className="mx-5 text-s" href="/login">
-              ログイン
-            </Link>
-          </button>
+        <div className="md:hidden flex justify-end items-center bg-[#FFFFF4]">
+          <Link className="mx-3 text-s" href="/timer">
+            TOP
+          </Link>
+          <Link className="mx-5 text-s" href="/login">
+            ログイン
+          </Link>
           <button className="pr-10 text-s" onClick={logout}>
             ログアウト
           </button>
@@ -141,11 +122,6 @@ export default function Header() {
                     href="/calendar"
                   >
                     カレンダー
-                  </Link>
-                </button>
-                <button className="mt-10">
-                  <Link className="py-2 px-5 border rounded-full" href="/timer">
-                    タイマー
                   </Link>
                 </button>
                 <button className="mt-10">

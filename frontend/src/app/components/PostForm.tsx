@@ -28,9 +28,6 @@ export default function PostForm() {
     reset();
     const chats = await getChat();
     setChats([...chats.data]);
-    if (targetRef.current) {
-      targetRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
   };
 
   // トークンの有効期限が切れたときに再ログインを促す
@@ -49,9 +46,16 @@ export default function PostForm() {
     fecthData();
   }, []);
 
+  // チャットが送信されたら自動スクロール
+  useEffect(() => {
+    if (targetRef.current) {
+      targetRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [chats]);
+
   return (
     <>
-      <div ref={targetRef} className="grid gap-3 w-3/5 ">
+      <div className="grid gap-3 w-3/5 ">
         <Toaster />
         <Posts chats={chats} />
         <div className="sticky bottom-0 bg-white">
@@ -71,6 +75,7 @@ export default function PostForm() {
           </form>
         </div>
       </div>
+      <div ref={targetRef}></div>
     </>
   );
 }

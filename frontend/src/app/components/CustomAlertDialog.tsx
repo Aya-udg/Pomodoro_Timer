@@ -9,11 +9,7 @@ import {
   AlertDialogTrigger,
 } from "@/app/components/ui/alert-dialog";
 import { TodoFormData, Schedule } from "@/app/types/index";
-import {
-  SubmitHandler,
-  SubmitErrorHandler,
-  FieldErrors,
-} from "react-hook-form";
+import { SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { useSchedule } from "@/context/EventContext";
 
 type Props = {
@@ -24,6 +20,8 @@ type Props = {
   onUpdate: (data: TodoFormData) => void;
   onInvalid: SubmitErrorHandler<TodoFormData>;
   onDelete: (event: Schedule) => void;
+
+  
   // 編集用トリガー
   isUpdateDialogOpen: boolean;
   setIsUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;

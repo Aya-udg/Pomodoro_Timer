@@ -81,7 +81,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-# リフレッシュトークンの生成関数
+# リフレッシュトークンの生成関数（作成））
 def create_refresh_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta

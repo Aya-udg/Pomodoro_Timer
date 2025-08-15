@@ -79,9 +79,7 @@ export default function ClendarForm({
         timer: 25,
         completed: false,
       };
-      console.log(defaultData);
       const res = await postSchedule(defaultData);
-      console.log(res);
       onOpenChange(false); //ダイアログを閉じる
       reset(); // フォーム初期化
       if (res) {
@@ -95,7 +93,6 @@ export default function ClendarForm({
 
   // 削除
   const onDelete = async (event: Schedule) => {
-    console.log(event.id);
     await deleteSchedule(event.id);
     onOpenChange(false); //ダイアログを閉じる
     reset(); // フォーム初期化

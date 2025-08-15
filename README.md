@@ -8,13 +8,16 @@
 勉強時にポモドーロ・テクニックを活用していたこと、また無料で利用できる既存サービスで勉強時間をグラフ化・カレンダーでTODOの管理ができるものが見つからず、作成しました。
 
 ## 使用技術一覧
-言語
+- 言語
 <img src="https://img.shields.io/badge/-TypeScript-007ACC.svg?logo=typescript&style=flat"><img src="https://img.shields.io/badge/-Python-F9DC3E.svg?logo=python&style=flat">
-ライブラリ・フレームワーク
+
+- ライブラリ・フレームワーク
 <img src="https://img.shields.io/badge/-React-555.svg?logo=react&style=flat"><img src="https://img.shields.io/badge/-Nextjs-000000.svg?logo=Nextjs&style=flat"><img src="https://img.shields.io/badge/-fastapi-009688.svg?logo=fastapi&style=flat"><img src="https://img.shields.io/badge/-pydantic-E92063.svg?logo=pydantic&style=flat">
-ミドルウェア
+
+- ミドルウェア
 <img src="https://img.shields.io/badge/-PostgreSQL-336791.svg?logo=postgresql&style=flat">
-その他
+
+- その他
 <img src="https://img.shields.io/badge/-Docker-EEE.svg?logo=docker&style=flat">
 
 ## 主な機能
