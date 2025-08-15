@@ -9,6 +9,8 @@ import { useSchedule } from "@/context/EventContext";
 import { format } from "date-fns-tz";
 import { toZonedTime } from "date-fns-tz";
 import CustomAlertDialog from "./CustomAlertDialog";
+import { useUserStore } from "@/app/components/userStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   onOpenChange: (open: boolean) => void;
@@ -37,6 +39,10 @@ export default function ClendarForm({
 
   const { setEvents, selectedEvent, selectedDate } = useSchedule();
 
+  const { username } = useUserStore();
+
+  const router = useRouter();
+
   // 情報更新
   const onUpdate = async (data: TodoFormData) => {
     const updateData: UpdateTodoFormData = {
@@ -62,27 +68,31 @@ export default function ClendarForm({
 
   // 登録
   const onCreate = async (data: TodoFormData) => {
-    const defaultData = {
-      ...data,
-      timer: 25,
-      completed: false,
-    };
-    console.log(defaultData);
-    const res = await postSchedule(defaultData);
-    console.log(res);
-    onOpenChange(false); //ダイアログを閉じる
-    reset(); // フォーム初期化
-    if (res) {
-      await getSchedule();
-      onSuccess("登録しました");
-    } else {
+    if (!username) {
       onError("ログインしてください");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
+    } else {
+      const defaultData = {
+        ...data,
+        timer: 25,
+        completed: false,
+      };
+      const res = await postSchedule(defaultData);
+      onOpenChange(false); //ダイアログを閉じる
+      reset(); // フォーム初期化
+      if (res) {
+        await getSchedule();
+        onSuccess("登録しました");
+      } else {
+        onError("エラーが発生しました");
+      }
     }
   };
 
   // 削除
   const onDelete = async (event: Schedule) => {
-    console.log(event.id);
     await deleteSchedule(event.id);
     onOpenChange(false); //ダイアログを閉じる
     reset(); // フォーム初期化

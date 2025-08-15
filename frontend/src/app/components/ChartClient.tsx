@@ -49,7 +49,9 @@ export default function ChartClient() {
     const date = new Date(v.date);
     return oneWeekAgo <= date && date <= choiceDay;
   });
-  const data = weekStudyHistory.reduce((sum, v) => sum + v.duration, 0);
+  const weekData = weekStudyHistory.reduce((sum, v) => sum + v.duration, 0);
+
+  const totalData = studydata.reduce((sum, v) => sum + v.duration, 0);
 
   return (
     <>
@@ -68,13 +70,15 @@ export default function ChartClient() {
           <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             <p className="text-center">週の集中時間</p>
             <p className="text-2xl text-center text-blue-700">
-              {Math.floor(data / 3600)}時間{Math.floor(data / 60) % 60}分
+              {Math.floor(weekData / 3600)}時間{Math.floor(weekData / 60) % 60}
+              分
             </p>
           </div>
           <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-            <p className="text-center">月の集中時間</p>
+            <p className="text-center">累計集中時間</p>
             <p className="text-2xl text-center text-blue-700 ">
-              {Math.floor(data / 3600)}時間{Math.floor(data / 60) % 60}分
+              {Math.floor(totalData / 3600)}時間
+              {Math.floor(totalData / 60) % 60}分
             </p>
           </div>
         </div>

@@ -47,7 +47,7 @@ def read_study_history_day(
     return [{"date": row[0], "duration": row[1]} for row in results]
 
 
-# タグごとにまとめた勉強データの取得
+# タグごとにまとめた勉強データの取得（作成中）
 @router.post("/studyhistory/summary-by-tag")
 def read_study_history_tag(
     username: str,

@@ -19,7 +19,6 @@ type Props = {
 };
 
 export function SimpleLineChart({ choiceDay, studydata, oneWeekAgo }: Props) {
-
   // 1週間分のデータをグラフ化
   const data = studydata.flatMap((v) => {
     const targetDate = new Date(v.date);
@@ -32,24 +31,32 @@ export function SimpleLineChart({ choiceDay, studydata, oneWeekAgo }: Props) {
 
   return (
     <>
-      <div className="flex flex-col">
-        <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
-        <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
-        <BarChart width={400} height={400} data={data}>
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip
-            formatter={(value: number) =>
-              `${
-                Math.floor(value / 60) ? `${Math.floor(value / 60)}時間` : ""
-              }${value % 60} 分`
-            }
-          />
-          <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
-          <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
-            <LabelList position="top" dataKey="集中時間" />
-          </Bar>
-        </BarChart>
+      <div className="flex flex-col w-full">
+        <div className="pb-10">
+          <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
+          <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
+        </div>
+        <div className="w-full h-full flex justify-center">
+          <ResponsiveContainer width="80%" height={300}>
+            <BarChart data={data}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip
+                formatter={(value: number) =>
+                  `${
+                    Math.floor(value / 60)
+                      ? `${Math.floor(value / 60)}時間`
+                      : ""
+                  }${value % 60} 分`
+                }
+              />
+              <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
+              <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
+                <LabelList position="top" dataKey="集中時間" />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </>
   );
