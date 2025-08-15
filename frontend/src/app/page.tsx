@@ -4,14 +4,17 @@ import Image from "next/image";
 export default function app() {
   return (
     <>
-      <main className="h-screen bg-gradient-to-t from-blue-200">
-        <div className="mt-20">
+      <main className="h-screen bg-[#FAF9F8]">
+        <div className="pt-20">
           <div className="">
             <h1 className="font-dotgothic text-3xl text-center">
               キャラクターと一緒に成長するアプリ
             </h1>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 place-items-center m-5">
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 place
+          -items-center m-5"
+          >
             <Image src="/sample.png" alt="logo" width={300} height={300} />
             <Image src="/sample.png" alt="logo" width={300} height={300} />
             <Image src="/sample.png" alt="logo" width={300} height={300} />

@@ -8,9 +8,9 @@ export default async function app() {
   const token = cookieStore.get("token")?.value;
   if (!token) redirect("/login");
   return (
-    <>
+    <div className="h-screen bg-[#FAF9F8]">
       <Header />
       <ChartClient />
-    </>
+    </div>
   );
 }

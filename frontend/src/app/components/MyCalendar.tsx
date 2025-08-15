@@ -11,7 +11,6 @@ import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
 import { Schedule } from "@/app/types/index";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/app/components/userStore";
 
 // FullCalendar を動的に読み込む
 const FullCalendar = dynamic(
@@ -28,7 +27,6 @@ export default function MyCalendar() {
   const { events, setEvents, setSelectedEvent, setSelectedDate } =
     useSchedule();
 
-  const { username } = useUserStore();
   const router = useRouter();
 
   const fetchData = async () => {
@@ -73,12 +71,6 @@ export default function MyCalendar() {
     businessHours: true,
 
     dateClick: (e) => {
-      if (!username) {
-        toast.error("ログインしてください");
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
-      }
       // クリックした日付の文字列が入る
       setSelectedEvent(null);
       setSelectedDate(e.dateStr);

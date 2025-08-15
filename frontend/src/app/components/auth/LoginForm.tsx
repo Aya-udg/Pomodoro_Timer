@@ -47,7 +47,7 @@ export default function LoginForm() {
         router.push("/top");
       }, 1500);
     } else {
-      toast.error("認証失敗しましたた");
+      toast.error("認証失敗しました");
     }
   };
 
