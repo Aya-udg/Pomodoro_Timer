@@ -4,7 +4,6 @@ export default function app() {
   return (
     <>
       <Header />
-
       <div className="mt-20">
         <h1>TOPページ</h1>
         <p>タイマー、カレンダーは会員登録なしで使用できます</p>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { SimpleLineChart, TwoLevelPieChart } from "@/app/components/Chart";
+import { SimpleLineChart } from "@/app/components/Chart";
 import { StudyHistory } from "@/app/types/index";
 import {
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { getStudyHistoryDay } from "@/lib/api/studyHistory";
 import toast, { Toaster } from "react-hot-toast";
-import { useLoginStore } from "@/app/components/userStore";
+import { Button } from "@/app/components/ui/button";
 
 export default function ChartClient() {
   const [studydata, setStudydata] = useState<StudyHistory[]>([]);
@@ -59,7 +59,9 @@ export default function ChartClient() {
       <div className="pt-10 sm:pt-30">
         <div className="flex justify-center mb-10">
           <DropdownMenu>
-            <DropdownMenuTrigger>日付の設定</DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">日付の設定</Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
               <p>見たい日を選んでください</p>
               <input type="date" onChange={handleChange} />

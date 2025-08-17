@@ -38,7 +38,7 @@ export default function app() {
   return (
     <>
       <Header />
-      <div className="h-screen bg-[#FAF9F8]">
+      <div className="h-screen">
         <div className="flex flex-col items-center justify-center mx-auto pt-10 sm:pt-30">
           <TimerDisplay {...timer} />
           <DropdownMenu>

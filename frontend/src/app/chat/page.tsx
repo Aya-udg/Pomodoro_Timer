@@ -12,7 +12,7 @@ export default async function Home() {
     <>
       <Header />
       <div className="pt-10 sm:pt-30">
-        <h1 className="text-center text-5xl">メッセージ</h1>
+        <h1 className="text-center lg:text-5xl text-3xl">メッセージ</h1>
         <div className="flex justify-center">
           <PostForm></PostForm>
         </div>

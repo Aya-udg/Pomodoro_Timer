@@ -48,6 +48,6 @@ export const ScheduleProvider = ({
 export const useSchedule = () => {
   const context = useContext(ScheduleContext);
   if (!context)
-    throw new Error("useScheduleはScheduleProviderの中で使ってな！");
+    throw new Error("useScheduleはScheduleProviderの中で使用してください");
   return context;
 };

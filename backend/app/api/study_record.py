@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Depends, APIRouter, status
 from sqlmodel import Session, select
 from models.settings import engine
-from models.models import Timer, StudyHistory, User
+from models.models import StudyHistory, User
 from sqlalchemy import func
 from .users import get_current_active_user
 

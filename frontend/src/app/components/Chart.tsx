@@ -11,6 +11,7 @@ import {
   LabelList,
 } from "recharts";
 import { StudyHistory } from "@/app/types/index";
+import Image from "next/image";
 
 type Props = {
   studydata: StudyHistory[];
@@ -32,9 +33,15 @@ export function SimpleLineChart({ choiceDay, studydata, oneWeekAgo }: Props) {
   return (
     <>
       <div className="flex flex-col w-full">
-        <div className="pb-10">
-          <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
-          <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
+        <div className="flex justify-center mb-10">
+          <div className="lg:w-[150px] w-[100px]">
+            <Image src="/ai_icon.png" alt="logo" width={150} height={150} />
+          </div>
+          <div className="self-center border-amber-100 bg-gray-100 rounded-3xl px-8 py-4">
+            <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
+            <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
+            <p>の勉強時間を表示しているよ</p>
+          </div>
         </div>
         <div className="w-full h-full flex justify-center">
           <ResponsiveContainer width="80%" height={300}>

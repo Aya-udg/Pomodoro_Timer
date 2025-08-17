@@ -40,6 +40,7 @@ export default function CustomAlertDialog({
   isDeleteDialogOpen,
   setIsDeleteDialogOpen,
 }: Props) {
+
   const { selectedEvent } = useSchedule();
 
   return (
