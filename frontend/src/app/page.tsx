@@ -21,7 +21,7 @@ export default function app() {
           </div>
           <div className="flex justify-center">
             <button className="group relative w-35 h-12 overflow-hidden rounded-md bg-blue-500 px-6 text-neutral-50 transition">
-              <Link href="/timer">
+              <Link href="/top">
                 <span className="font-dotgothic">使ってみる</span>
                 <div className="absolute inset-0 h-full w-0 bg-white/30 transition-[width] group-hover:w-full"></div>
               </Link>

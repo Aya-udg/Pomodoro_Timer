@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { SimpleLineChart, TwoLevelPieChart } from "@/app/components/Chart";
+import { SimpleLineChart } from "@/app/components/Chart";
 import { StudyHistory } from "@/app/types/index";
 import {
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { getStudyHistoryDay } from "@/lib/api/studyHistory";
 import toast, { Toaster } from "react-hot-toast";
-import { useLoginStore } from "@/app/components/userStore";
+import { Button } from "@/app/components/ui/button";
 
 export default function ChartClient() {
   const [studydata, setStudydata] = useState<StudyHistory[]>([]);
@@ -35,6 +35,9 @@ export default function ChartClient() {
           router.push("/login");
         }, 1500);
       }
+      if (res.error) {
+        toast.error("勉強時間が登録されていません");
+      }
       setStudydata(res.data);
     };
     fecthData();
@@ -43,6 +46,9 @@ export default function ChartClient() {
   // ユーザーが選択した日の1週間前の日付を取得
   const oneWeekAgo = new Date(choiceDay);
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  // filterのエラー回避
+  if (!studydata) return;
 
   // 今週の勉強時間
   const weekStudyHistory = studydata.filter((v) => {
@@ -59,7 +65,9 @@ export default function ChartClient() {
       <div className="pt-10 sm:pt-30">
         <div className="flex justify-center mb-10">
           <DropdownMenu>
-            <DropdownMenuTrigger>日付の設定</DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">日付の設定</Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
               <p>見たい日を選んでください</p>
               <input type="date" onChange={handleChange} />
@@ -70,8 +78,8 @@ export default function ChartClient() {
           <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             <p className="text-center">週の集中時間</p>
             <p className="text-2xl text-center text-blue-700">
-              {Math.floor(weekData / 3600)}時間{Math.floor(weekData / 60) % 60}
-              分
+              {Math.floor(weekData / 3600)}時間
+              {Math.floor(weekData / 60) % 60}分
             </p>
           </div>
           <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">

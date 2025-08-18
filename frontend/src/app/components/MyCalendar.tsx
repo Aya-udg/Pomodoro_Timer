@@ -108,7 +108,9 @@ export default function MyCalendar() {
   return (
     <div className="p-4">
       <Toaster />
+
       <FullCalendar {...(calendarOptions as any)} />
+
       <AddEventDialog
         onSuccess={handleSuccess}
         onError={handleError}

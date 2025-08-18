@@ -61,7 +61,6 @@
   @apply bg-red-600;
 }
 
-
 .responsive-text {
   @apply sm:text-sm lg:text-base;
 }

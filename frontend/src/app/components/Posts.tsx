@@ -10,7 +10,7 @@ export default function Posts({ chats }: props) {
   const reversChats = [...chats].reverse();
 
   return (
-    <section className="flex justify-center items-center flex-col">
+    <section className="flex justify-center items-center flex-col md:w-full">
       <div>
         {reversChats?.map((chat) => (
           <div key={chat.id}>

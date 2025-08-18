@@ -8,7 +8,7 @@ from sqlalchemy import MetaData, engine_from_config, pool
 from alembic import context
 
 
-from app.models.models import Timer, Schedule, StudyHistory, User
+from models.models import Schedule, StudyHistory, User
 
 # 3階層上の .env を指定
 env_path = Path(__file__).resolve().parents[2] / ".env"
@@ -43,7 +43,7 @@ def combine_metadata(*args):
 
 
 target_metadata = combine_metadata(
-    User.metadata, Timer.metadata, Schedule.metadata, StudyHistory.metadata
+    User.metadata, Schedule.metadata, StudyHistory.metadata
 )
 
 # other values from the config, defined by the needs of env.py,

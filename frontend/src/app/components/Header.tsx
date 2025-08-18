@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/components/ui/sheet";
+import { Button } from "@/app/components/ui/button";
 
 export default function Header() {
   const { username, setUsername } = useUserStore();
@@ -49,7 +50,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="relative">
+      <header className="relative z-10">
         <Toaster />
         <div className="hidden md:block border  bg-[#FFFFF4] border-b-2  p-3 justify-between fixed top-0 right-0 left-0 h-15">
           <div className="flex justify-between items-center">
@@ -58,7 +59,7 @@ export default function Header() {
               こんにちは：{username ? username : "ゲスト"}さん
             </p>
             <nav>
-              <Link className="responsive-text mx-5" href="/timer">
+              <Link className="responsive-text mx-5" href="/top">
                 TOP
               </Link>
               <Link className="responsive-text mx-5" href="/calendar">
@@ -88,8 +89,10 @@ export default function Header() {
             </nav>
           </div>
         </div>
+
+        {/* モバイル用メニュー */}
         <div className="md:hidden flex justify-end items-center bg-[#FFFFF4]">
-          <Link className="mx-3 text-s" href="/timer">
+          <Link className="mx-3 text-s" href="/top">
             TOP
           </Link>
           <Link className="mx-5 text-s" href="/login">
@@ -112,28 +115,25 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-60">
               <SheetHeader>
-                <SheetTitle className="text-center">メニュー</SheetTitle>
+                <SheetTitle className="text-center pt-10">メニュー</SheetTitle>
                 <SheetDescription></SheetDescription>
               </SheetHeader>
               <nav className="grid grid-cols-1">
-                <button className="mx-10">
-                  <Link
-                    className="py-2 px-5 border rounded-full"
-                    href="/calendar"
-                  >
+                <Button variant="link" asChild>
+                  <Link className="py-2 px-5" href="/calendar">
                     カレンダー
                   </Link>
-                </button>
-                <button className="mt-10">
-                  <Link className="py-2 px-5 border rounded-full" href="/graph">
+                </Button>
+                <Button variant="link" asChild>
+                  <Link className="py-2 px-5" href="/graph">
                     グラフ
                   </Link>
-                </button>
-                <button className="mt-10">
-                  <Link className="py-2 px-5 border rounded-full" href="/chat">
+                </Button>
+                <Button variant="link" asChild>
+                  <Link className="py-2 px-5" href="/chat">
                     チャット
                   </Link>
-                </button>
+                </Button>
               </nav>
             </SheetContent>
           </Sheet>
