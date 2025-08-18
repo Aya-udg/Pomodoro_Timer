@@ -14,7 +14,6 @@ export async function GET() {
     );
   }
   const res = await fetch(`${DB_URL}/studyhistory/summary-by-date`, {
-    method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

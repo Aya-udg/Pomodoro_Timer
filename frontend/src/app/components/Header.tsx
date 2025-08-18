@@ -59,7 +59,7 @@ export default function Header() {
               こんにちは：{username ? username : "ゲスト"}さん
             </p>
             <nav>
-              <Link className="responsive-text mx-5" href="/timer">
+              <Link className="responsive-text mx-5" href="/top">
                 TOP
               </Link>
               <Link className="responsive-text mx-5" href="/calendar">
@@ -92,7 +92,7 @@ export default function Header() {
 
         {/* モバイル用メニュー */}
         <div className="md:hidden flex justify-end items-center bg-[#FFFFF4]">
-          <Link className="mx-3 text-s" href="/timer">
+          <Link className="mx-3 text-s" href="/top">
             TOP
           </Link>
           <Link className="mx-5 text-s" href="/login">
