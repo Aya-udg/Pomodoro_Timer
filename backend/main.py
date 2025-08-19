@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from api import study_record, users, schedule, ai
+from api import study_record, users, schedule, ai, login
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
@@ -32,5 +32,6 @@ async def handler(request: Request, exc: RequestValidationError):
 
 app.include_router(study_record.router)
 app.include_router(users.router)
+app.include_router(login.router)
 app.include_router(schedule.router)
 app.include_router(ai.router)

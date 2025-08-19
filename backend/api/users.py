@@ -1,6 +1,6 @@
 from jose import jwt, JWTError, ExpiredSignatureError
 from fastapi import Depends, HTTPException, status, APIRouter
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 from models.settings import engine
@@ -76,7 +76,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     # 設定されていなかったら15分にする
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "token_type": TokenWithUsername.access_token})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -84,8 +84,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 # リフレッシュトークンの生成関数（作成））
 def create_refresh_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + expires_delta
-    to_encode.update({"exp": expire})
+    expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    to_encode.update({"exp": expire, "token_type": TokenWithUsername.refresh_token})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -123,48 +123,3 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     return current_user
 
 
-# トークンを取得するためのエンドポイント
-@router.post("/token")
-async def login_for_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    session: Session = Depends(get_session),
-):
-    user = authenticate_user(form_data.username, form_data.password, session)
-    if not user:
-        credentials_exception("ユーザー名かパスワード違います")
-    access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
-    refresh_token_expires = timedelta(days=int(REFRESH_TOKEN_EXPIRE_DAYS))
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    refresh_token = create_refresh_token(
-        data={"sub": user.username}, expires_delta=refresh_token_expires
-    )
-    return TokenWithUsername(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        token_type="bearer",
-        username=user.username,
-    )
-
-
-# ユーザー登録用のエンドポイント
-@router.post("/users/register/", response_model=User, tags=["users"])
-def create_user(user_create: UserCreate, session: Session = Depends(get_session)):
-    user = get_user(user_create.username, session)
-    if user:
-        raise HTTPException(
-            status_code=400, detail="このユーザー名は既に登録されています"
-        )
-    hashed_password = get_password_hash(user_create.password)
-    new_user = User(username=user_create.username, hashed_password=hashed_password)
-    session.add(new_user)
-    session.commit()
-    session.refresh(new_user)
-    return new_user
-
-
-# 現在のユーザー情報を取得するエンドポイント
-@router.get("/users/me/", response_model=UserLogin, tags=["users"])
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user

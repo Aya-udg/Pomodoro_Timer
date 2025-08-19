@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const username = form.get("username") as string;
   const password = form.get("password") as string;
 
-  const res = await fetch(`${DB_URL}/token`, {
+  const res = await fetch(`${DB_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
