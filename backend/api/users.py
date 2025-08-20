@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from sqlmodel import Session, select
 from models.settings import engine
 import os
-from models.models import User, TokenWithUsername, TokenData, UserCreate, UserLogin
+from models.models import User, TokenWithUsername, TokenData
 from datetime import datetime, timedelta, timezone
 
 
@@ -121,5 +121,3 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
-
-

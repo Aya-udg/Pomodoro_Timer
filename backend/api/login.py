@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from jose import jwt
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 from models.models import User, TokenWithUsername, UserCreate, UserLogin
@@ -13,6 +14,7 @@ from .users import (
     get_user,
     get_password_hash,
     get_current_active_user,
+    oauth2_scheme,
 )
 
 router = APIRouter()
@@ -51,6 +53,22 @@ async def login_for_token(
         access_token=access_token,
         token_type="bearer",
         username=user.username,
+    )
+
+
+@router.post("/refresh")
+def refresh_token(
+    reqest: Request,
+):
+    refresh_token = reqest.cookies.get("refresh_token")
+    payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+    username = payload.get("sub")
+    access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
+    new_access_token = create_access_token(
+        data={"sub": username}, expires_delta=access_token_expires
+    )
+    return TokenWithUsername(
+        access_token=new_access_token, token_type="bearer", username=username
     )
 
 
