@@ -14,36 +14,35 @@ from .users import (
     get_user,
     get_password_hash,
     get_current_active_user,
-    oauth2_scheme,
 )
 
 router = APIRouter()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
-REFRESH_TOKEN_EXPIRE_DAYS = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
 
 
 # ログイン用エンドポイント
 @router.post("/login")
 async def login_for_token(
-    responce: Response,
+    response: Response,
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
 ):
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
-        credentials_exception("ユーザー名かパスワード違います")
-    access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
-    refresh_token_expires = timedelta(days=int(REFRESH_TOKEN_EXPIRE_DAYS))
+        return credentials_exception("ユーザー名かパスワード違います")
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     refresh_token = create_refresh_token(
         data={"sub": user.username}, expires_delta=refresh_token_expires
     )
-    responce.set_cookie(
+    response.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
@@ -56,11 +55,14 @@ async def login_for_token(
     )
 
 
+# リフレッシュトークン検証用エンドポイント
 @router.post("/refresh")
 def refresh_token(
-    reqest: Request,
+    request: Request,
 ):
-    refresh_token = reqest.cookies.get("refresh_token")
+    refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token:
+        return credentials_exception("リフレッシュトークンがありません")
     payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
     username = payload.get("sub")
     access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))

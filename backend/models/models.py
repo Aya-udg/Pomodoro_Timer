@@ -53,7 +53,6 @@ class User(SQLModel, table=True):
 class TokenWithUsername(SQLModel):
     access_token: str
     token_type: str
-    refresh_token: str
     username: str
 
 

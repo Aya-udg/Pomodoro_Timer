@@ -38,9 +38,10 @@ export default function LoginForm() {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(data),
     });
+
     if (res.ok) {
-      const result = await res.json();
       // ログイン成功
+      const result = await res.json();
       setUsername(result.data.username);
       toast.success("ログインしました!TOPページに戻ります");
       setTimeout(() => {

@@ -22,8 +22,22 @@ export async function GET() {
   const data = await res.json();
   if (res.status == 401) {
     if (data.detail.code === "トークンの有効期限切れです") {
+      // 古いアクセストークンの削除
       cookieStore.delete("token");
-      return NextResponse.json({ error: data.detail.code }, { status: 401 });
+      // リフレッシュトークンの検証
+      const res = await fetch(`${DB_URL}/refresh`, {
+        method: "POST",
+      });
+      if (!res.ok) {
+        return NextResponse.json(
+          { error: "再ログインしてください" },
+          { status: 401 }
+        );
+      } else {
+        const data = await res.json();
+        cookieStore.set("token", data.access_token, { httpOnly: true });
+        return NextResponse.json({ data }, { status: 200 });
+      }
     } else if (data.detail.code === "ユーザーが見つかりません") {
       return NextResponse.json({ error: data.detail.code }, { status: 401 });
     }
