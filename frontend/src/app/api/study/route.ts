@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
   if (!token) {
     return NextResponse.json(
       { error: "ログインしていません" },
-      { status: 401 }
+      { status: 401 } 
     );
   }
   const res = await fetch(`${DB_URL}/studyhistory/pos`, {

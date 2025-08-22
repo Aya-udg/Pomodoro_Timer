@@ -39,8 +39,7 @@ export default function Header() {
     const fetchData = async () => {
       const res = await fetch("/api/currentuser");
       // ログインしていないときは何もしない
-      console.log(res);
-      if (res.status === 401) return;
+      // if (res.status === 401) return;
       if (res.ok) {
         const result = await res.json();
         setUsername(result.data.username);

@@ -46,7 +46,7 @@ async def login_for_token(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        expires=refresh_token_expires,
+        max_age=refresh_token_expires,
     )
     return TokenWithUsername(
         access_token=access_token,

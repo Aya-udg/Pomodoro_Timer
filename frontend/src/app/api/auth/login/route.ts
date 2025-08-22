@@ -20,6 +20,10 @@ export async function POST(request: NextRequest) {
   });
 
   const data = await res.json();
+   // ★ FastAPI が出した Set-Cookie を転送
+  const setCookie = res.headers.get('"set-cookie')
+  if (setCookie) res.headers.set("set-cookie", setCookie);
+  
   cookieStore.set("token",data.access_token,{httpOnly:true});
   if (res.ok) {
     return NextResponse.json({ data }, { status: 200 });
