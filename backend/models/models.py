@@ -3,14 +3,6 @@ from datetime import datetime
 from typing import Optional
 
 
-# class Timer(SQLModel, table=True):
-#     id: Optional[int] = Field(default=None, primary_key=True)
-#     hour: int | None
-#     minutes: int = Field(default=25, nullable=True)
-#     second: int | None
-#     user_id: Optional[int] = Field(default=None, foreign_key="users.id")
-
-
 class Schedule(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(nullable=False)

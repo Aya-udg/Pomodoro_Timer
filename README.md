@@ -1,4 +1,4 @@
-# AIキャラと一緒に学習時間を管理できるポモドーロタイマーアプリ
+# AIキャラと一緒に勉強できるポモドーロタイマーアプリ
 <img src="frontend\public\ai_icon.gif">  
 
 ## URL
@@ -57,7 +57,7 @@
 
 
 ## ER図
-
+<img src="ER.png"> 
 
 ## 環境変数
 
