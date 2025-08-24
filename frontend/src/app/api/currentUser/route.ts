@@ -22,8 +22,32 @@ export async function GET() {
   const data = await res.json();
   if (res.status == 401) {
     if (data.detail.code === "トークンの有効期限切れです") {
-      cookieStore.delete("token");
-      return NextResponse.json({ error: data.detail.code }, { status: 401 });
+      // リフレッシュトークンの検証
+      const cookieStore = await cookies();
+      const refresh_token = cookieStore.get("refresh_token")?.value;
+      const res = await fetch(`${DB_URL}/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${refresh_token}`,
+        },
+      });
+      console.log(res);
+      if (!res.ok) {
+        // 古いアクセストークンの削除
+        cookieStore.delete("token");
+        return NextResponse.json(
+          { error: "再ログインしてください" },
+          { status: 401 }
+        );
+      } else {
+        const data = await res.json();
+        cookieStore.set("token", data.access_token, {
+          path: "/",
+          httpOnly: true,
+        });
+        return NextResponse.json({ data }, { status: 200 });
+      }
     } else if (data.detail.code === "ユーザーが見つかりません") {
       return NextResponse.json({ error: data.detail.code }, { status: 401 });
     }

@@ -33,14 +33,17 @@ export default function PostForm() {
   // トークンの有効期限が切れたときに再ログインを促す
   useEffect(() => {
     const fecthData = async () => {
-      const res = await getChat();
-      if (res.status === 401) {
-        toast.error(res.error);
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
-      } else {
-        setChats([...res.data]);
+      const res = await fetch("/api/currentuser");
+      if (res.ok) {
+        const res = await getChat();
+        if (res.status === 401) {
+          toast.error(res.error);
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500);
+        } else {
+          setChats([...res.data]);
+        }
       }
     };
     fecthData();

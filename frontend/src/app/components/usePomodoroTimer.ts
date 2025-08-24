@@ -17,7 +17,7 @@ export const usePomodoroTimer = (
     "timer"
   );
   const { username } = useUserStore();
-  
+
   const getExpiryTime = (seconds: number) => {
     const time = new Date();
     time.setSeconds(time.getSeconds() + seconds);
@@ -64,7 +64,10 @@ export const usePomodoroTimer = (
       setSessionCount(newCount);
       console.log(posdate);
       // ユーザー登録していたらDBに保存
-      username && postStudyHistory(posdate);
+      const res = await fetch("/api/currentuser");
+      if (res.ok) {
+        postStudyHistory(posdate);
+      }
 
       if (newCount % 4 === 0) {
         setTimerType("longbreak");

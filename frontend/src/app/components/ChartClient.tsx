@@ -28,17 +28,20 @@ export default function ChartClient() {
   // トークンの有効期限が切れたときに再ログインを促す
   useEffect(() => {
     const fecthData = async () => {
-      const res = await getStudyHistoryDay();
-      if (res.status === 401) {
-        toast.error(res.error);
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
+      const res = await fetch("/api/currentuser");
+      if (res.ok) {
+        const res = await getStudyHistoryDay();
+        if (res.satus === 401) {
+          toast.error(res.error);
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500);
+          if (res.error) {
+            toast.error("勉強時間が登録されていません");
+          }
+        }
+        setStudydata(res.data);
       }
-      if (res.error) {
-        toast.error("勉強時間が登録されていません");
-      }
-      setStudydata(res.data);
     };
     fecthData();
   }, []);

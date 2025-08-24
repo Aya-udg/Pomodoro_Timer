@@ -52,8 +52,8 @@ class User(SQLModel, table=True):
 # トークンのデータモデル
 class TokenWithUsername(SQLModel):
     access_token: str
+    refresh_token: str | None
     token_type: str
-    refresh_token: str
     username: str
 
 

@@ -65,6 +65,9 @@
   @apply sm:text-sm lg:text-base;
 }
 
+.heading-text{
+  @apply sm:text-xl
+}
 
 
 :root {
