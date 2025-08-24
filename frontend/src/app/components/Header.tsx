@@ -38,8 +38,6 @@ export default function Header() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/currentuser");
-      // ログインしていないときは何もしない
-      // if (res.status === 401) return;
       if (res.ok) {
         const result = await res.json();
         setUsername(result.data.username);
@@ -54,7 +52,6 @@ export default function Header() {
         <Toaster />
         <div className="hidden md:block border  bg-[#FFFFF4] border-b-2  p-3 justify-between fixed top-0 right-0 left-0 h-15">
           <div className="flex justify-between items-center">
-            <h1 className="text-left items-center">ロゴ</h1>
             <p className="responsive-text">
               こんにちは：{username ? username : "ゲスト"}さん
             </p>
@@ -92,6 +89,9 @@ export default function Header() {
 
         {/* モバイル用メニュー */}
         <div className="md:hidden flex justify-end items-center bg-[#FFFFF4]">
+          <p className="responsive-text">
+            こんにちは：{username ? username : "ゲスト"}さん
+          </p>
           <Link className="mx-3 text-s" href="/top">
             TOP
           </Link>
