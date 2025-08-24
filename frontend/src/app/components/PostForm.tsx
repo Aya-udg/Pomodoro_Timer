@@ -1,15 +1,20 @@
 "use client";
 import { Textarea } from "@/app/components/ui/textarea";
-import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Chat } from "@/app/types/index";
-import postChat from "@/lib/api/chat";
-import { useState, useEffect } from "react";
+import { Chat, ChatHistory } from "@/app/types/index";
+import { postChat, getChat } from "@/lib/api/chat";
+import { useState, useEffect, useRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Posts from "./Posts";
 
 export default function PostForm() {
-  const { register, handleSubmit, reset, formState } = useForm<Chat>();
-  const [chats, setChats] = useState<Chat[]>([]);
+  const { register, handleSubmit, reset } = useForm<Chat>();
+  const [chats, setChats] = useState<ChatHistory[]>([]);
+  const router = useRouter();
+
+  const targetRef = useRef<HTMLDivElement | null>(null);
 
   const today = new Date();
   const date = today.toLocaleDateString();
@@ -19,40 +24,58 @@ export default function PostForm() {
       ...message,
       date: date,
     };
-    const res = await postChat(request);
+    await postChat(request);
     reset();
-    setChats([res.date, res.message, res.response]);
+    const chats = await getChat();
+    setChats([...chats.data]);
   };
 
+  // トークンの有効期限が切れたときに再ログインを促す
   useEffect(() => {
     const fecthData = async () => {
-      const data = await getStudyHistoryDay();
-      if (!data) {
-        toast.error("ログインしてください");
+      const res = await getChat();
+      if (res.status === 401) {
+        toast.error(res.error);
         setTimeout(() => {
           router.push("/login");
         }, 1500);
       } else {
-        setStudydata(data.data);
+        setChats([...res.data]);
       }
     };
     fecthData();
   }, []);
 
+  // チャットが送信されたら自動スクロール
+  useEffect(() => {
+    if (targetRef.current) {
+      targetRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [chats]);
+
   return (
     <>
-      <div className="grid gap-3 w-3/5">
-        <Label htmlFor="message">メッセージ</Label>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Textarea
-            placeholder="メッセージ"
-            {...register("message", {
-              maxLength: 50,
-            })}
-          />
-          <Button type="submit">投稿</Button>
-        </form>
+      <div className="grid gap-3 w-3/5 ">
+        <Toaster />
+        <Posts chats={chats} />
+        <div className="sticky bottom-0 bg-white">
+          <form
+            className="flex mb-10 items-center"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Textarea
+              placeholder="メッセージ"
+              {...register("message", {
+                maxLength: 50,
+              })}
+            />
+            <div>
+              <Button type="submit">投稿</Button>
+            </div>
+          </form>
+        </div>
       </div>
+      <div ref={targetRef}></div>
     </>
   );
 }

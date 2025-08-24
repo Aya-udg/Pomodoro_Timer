@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/components/ui/sheet";
+import { Button } from "@/app/components/ui/button";
 
 export default function Header() {
   const { username, setUsername } = useUserStore();
@@ -36,12 +37,9 @@ export default function Header() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/currentuser", {
-        method: "GET",
-      });
+      const res = await fetch("/api/currentuser");
       // ログインしていないときは何もしない
-      if (res.status === 401) return;
-
+      // if (res.status === 401) return;
       if (res.ok) {
         const result = await res.json();
         setUsername(result.data.username);
@@ -52,60 +50,55 @@ export default function Header() {
 
   return (
     <>
-      <header className="max-w-[400px] relative">
+      <header className="relative z-10">
         <Toaster />
-        <div className="hidden sm:block border border-b-3 bg-neutral-50 p-3 justify-between fixed top-0 right-0 left-0 h-15">
-          <div className="flex">
-            <h1 className="text-left">ロゴ</h1>
-            <p>こんにちは：{username ? username : "ゲスト"}さん</p>
+        <div className="hidden md:block border  bg-[#FFFFF4] border-b-2  p-3 justify-between fixed top-0 right-0 left-0 h-15">
+          <div className="flex justify-between items-center">
+            <h1 className="text-left items-center">ロゴ</h1>
+            <p className="responsive-text">
+              こんにちは：{username ? username : "ゲスト"}さん
+            </p>
             <nav>
-              <button>
-                <Link className="mx-10" href="/top">
-                  TOP
-                </Link>
-              </button>
-              <button>
-                <Link className="mx-10" href="/calendar">
-                  カレンダー
-                </Link>
-              </button>
-              <button>
-                <Link className="mx-10" href="/timer">
-                  タイマー
-                </Link>
-              </button>
-              <button>
-                <Link className="mx-10" href="/graph">
-                  グラフ
-                </Link>
-              </button>
-              <button>
-                <Link className="mx-10" href="/chat">
-                  チャット
-                </Link>
-              </button>
-              <button>
-                <Link className="mx-10" href="/login">
+              <Link className="responsive-text mx-5" href="/top">
+                TOP
+              </Link>
+              <Link className="responsive-text mx-5" href="/calendar">
+                カレンダー
+              </Link>
+              <Link className="responsive-text mx-5" href="/graph">
+                グラフ
+              </Link>
+              <Link className="responsive-text mx-5" href="/chat">
+                チャット
+              </Link>
+              {username ? (
+                <button
+                  className="responsive-text inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 btn-red"
+                  onClick={logout}
+                >
+                  ログアウト
+                </button>
+              ) : (
+                <Link
+                  className="responsive-text mx-5 inline-flex h-10 items-center justify-center rounded-md px-3 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95 bg-blue-600"
+                  href="/login"
+                >
                   ログイン
                 </Link>
-              </button>
+              )}
             </nav>
-            <button onClick={logout}>ログアウト</button>
           </div>
         </div>
 
-        <div className="sm:hidden flex justify-end ">
-          <button>
-            <Link className="mx-5" href="/top">
-              TOP
-            </Link>
-          </button>
-          <button>
-            <Link className="mx-5" href="/login">
-              ログイン
-            </Link>
-          </button>
-          <button className="mr-15 mx-5" onClick={logout}>
+        {/* モバイル用メニュー */}
+        <div className="md:hidden flex justify-end items-center bg-[#FFFFF4]">
+          <Link className="mx-3 text-s" href="/top">
+            TOP
+          </Link>
+          <Link className="mx-5 text-s" href="/login">
+            ログイン
+          </Link>
+          <button className="pr-10 text-s" onClick={logout}>
             ログアウト
           </button>
           <Sheet>
@@ -122,25 +115,25 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-60">
               <SheetHeader>
-                <SheetTitle>メニュー</SheetTitle>
-                <SheetDescription>リンクを選んでね</SheetDescription>
+                <SheetTitle className="text-center pt-10">メニュー</SheetTitle>
+                <SheetDescription></SheetDescription>
               </SheetHeader>
               <nav className="grid grid-cols-1">
-                <Link className="mx-10" href="/calendar">
-                  カレンダー
-                </Link>
-                <Link className="mx-10" href="/timer">
-                  タイマー
-                </Link>
-                <Link className="mx-10" href="/graph">
-                  グラフ
-                </Link>
-                <Link className="mx-10" href="/chat">
-                  チャット
-                </Link>
-                <Link className="mx-10" href="/login">
-                  ログイン
-                </Link>
+                <Button variant="link" asChild>
+                  <Link className="py-2 px-5" href="/calendar">
+                    カレンダー
+                  </Link>
+                </Button>
+                <Button variant="link" asChild>
+                  <Link className="py-2 px-5" href="/graph">
+                    グラフ
+                  </Link>
+                </Button>
+                <Button variant="link" asChild>
+                  <Link className="py-2 px-5" href="/chat">
+                    チャット
+                  </Link>
+                </Button>
               </nav>
             </SheetContent>
           </Sheet>

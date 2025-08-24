@@ -38,16 +38,17 @@ export default function LoginForm() {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(data),
     });
+
     if (res.ok) {
-      const result = await res.json();
       // ログイン成功
+      const result = await res.json();
       setUsername(result.data.username);
       toast.success("ログインしました!TOPページに戻ります");
       setTimeout(() => {
         router.push("/top");
       }, 1500);
     } else {
-      toast.error("認証失敗しましたた");
+      toast.error("認証失敗しました");
     }
   };
 
@@ -56,7 +57,7 @@ export default function LoginForm() {
       <div>
         <Toaster />
       </div>
-      <div className="flex  items-center mx-auto justify-center max-w-sm pt-30">
+      <div className="flex items-center mx-auto justify-center max-w-sm pt-10 sm:pt-30">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
@@ -81,12 +82,6 @@ export default function LoginForm() {
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">パスワード</Label>
-                    <a
-                      href="#"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    >
-                      パスワードをお忘れの方
-                    </a>
                   </div>
                   <Input
                     id="password"

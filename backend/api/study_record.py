@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Depends, APIRouter, status
 from sqlmodel import Session, select
 from models.settings import engine
-from models.models import Timer, StudyHistory, User
+from models.models import StudyHistory, User
 from sqlalchemy import func
 from .users import get_current_active_user
 
@@ -47,7 +47,7 @@ def read_study_history_day(
     return [{"date": row[0], "duration": row[1]} for row in results]
 
 
-# タグごとにまとめた勉強データの取得
+# タグごとにまとめた勉強データの取得（作成中）
 @router.post("/studyhistory/summary-by-tag")
 def read_study_history_tag(
     username: str,

@@ -28,7 +28,7 @@ export default function AddEventDialog({
           <DialogTitle>予定を{selectedEvent ? "編集" : "追加"}する</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <TodoForm
+          <ClendarForm
             onSuccess={onSuccess}
             onError={onError}
             onOpenChange={onOpenChange}

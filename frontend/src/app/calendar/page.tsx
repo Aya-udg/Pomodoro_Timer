@@ -6,12 +6,18 @@ export default function CalendarPage() {
   return (
     <>
       <Header />
-      <main className="mt-20">
-        <h1 className="text-center text-xl font-bold p-4">📅スケジュール📅</h1>
-        <ScheduleProvider>
-          <MyCalendar />
-        </ScheduleProvider>
-      </main>
+      <div className="h-screen">
+        <main className="pt-10 sm:pt-30">
+          <h1 className="text-center text-xl font-bold p-4">カレンダー</h1>
+          <div className="flex justify-center">
+            <ScheduleProvider>
+              <div className="flex justify-center lg:w-4/5">
+                <MyCalendar />
+              </div>
+            </ScheduleProvider>
+          </div>
+        </main>
+      </div>
     </>
   );
 }
