@@ -1,4 +1,5 @@
-# PomodoroTimer
+# AIキャラと一緒に学習時間を管理できるポモドーロタイマーアプリ
+<img src="frontend\public\ai_icon.gif">  
 
 ## URL
 
@@ -22,33 +23,38 @@
 
 ## 主な機能
 
-タイマーページ（会員登録なしで利用可）
-<img src="frontend\public\top.png">
+#### タイマーページ（会員登録なしで利用可）
+<img src="frontend\public\top.png" width="80%">
 デフォルトで集中時間25分・小休憩5分・休憩20分になっています。
 必要に応じて時間変更が可能です。
 
-ログイン・新規会員登録ページ
-<img src="frontend\public\login.png">  
+
+#### ログイン・新規会員登録ページ
+<img src="frontend\public\login.png" width="80%">  
 どちらもバリデーションが表示されるようになっており、エラーの内容が分かりやすくなっています。  
 
-グラフページ
-<img src="frontend\public\graph.png">  
+
+#### グラフページ
+<img src="frontend\public\graph.png" width="80%">  
 ユーザーが選んだ日から1週間の勉強時間をグラフ表示することが可能です。  
 また今までの勉強時間の累計もデフォルトで表示されます。  
 
-カレンダーページ
-<img src="frontend\public\calendar.png">  
+
+#### カレンダーページ
+<img src="frontend\public\calendar.png" width="80%">  
 予定を登録することが可能です。  
 表示色を変更することができるので、カテゴリー別に登録することが可能です。  
 
-チャットページ
-<img src="frontend\public\chat.png">  
+
+#### チャットページ
+<img src="frontend\public\chat.png" width="80%">  
 ＡＩとのチャットを利用することができます。キャラクターのイラストは自作しました。  
 
 カレンダーページの予定登録・グラフ・チャットはログインユーザーのみ利用可能です。  
 非ログインユーザーが予定登録・ページへのアクセスを試みた場合は、ログインページにリダイレクトされます。  
 
 またトークンの有効期限が切れた場合も再ログインを促します。  
+
 
 ## ER図
 
