@@ -23,10 +23,16 @@ export async function GET() {
   if (res.status == 401) {
     if (data.detail.code === "トークンの有効期限切れです") {
       // リフレッシュトークンの検証
+      const cookieStore = await cookies();
+      const refresh_token = cookieStore.get("refresh_token")?.value;
       const res = await fetch(`${DB_URL}/refresh`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${refresh_token}`,
+        },
       });
-      console.log(res)
+      console.log(res);
       if (!res.ok) {
         // 古いアクセストークンの削除
         cookieStore.delete("token");
@@ -36,7 +42,10 @@ export async function GET() {
         );
       } else {
         const data = await res.json();
-        cookieStore.set("token", data.access_token, { path: "/",httpOnly: true });
+        cookieStore.set("token", data.access_token, {
+          path: "/",
+          httpOnly: true,
+        });
         return NextResponse.json({ data }, { status: 200 });
       }
     } else if (data.detail.code === "ユーザーが見つかりません") {

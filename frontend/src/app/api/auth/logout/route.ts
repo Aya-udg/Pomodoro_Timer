@@ -19,7 +19,9 @@ export async function POST() {
         Authorization: `Bearer ${token}`,
       },
     });
-    cookieStore.delete("token");
-    return NextResponse.json({ message: "ログアウトしました" });
+    const response = NextResponse.json({ message: "ログアウトしました" });
+    response.cookies.delete("token");
+    response.cookies.delete("refresh_token");
+    return response;
   }
 }

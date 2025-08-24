@@ -14,6 +14,7 @@ from .users import (
     get_user,
     get_password_hash,
     get_current_active_user,
+    oauth2_scheme,
 )
 
 router = APIRouter()
@@ -46,10 +47,14 @@ async def login_for_token(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        max_age=refresh_token_expires,
+        # 本番環境では直す
+        secure=False,
+        samesite="lax",
+        expires=refresh_token_expires,
     )
     return TokenWithUsername(
         access_token=access_token,
+        refresh_token=refresh_token,
         token_type="bearer",
         username=user.username,
     )
@@ -58,9 +63,8 @@ async def login_for_token(
 # リフレッシュトークン検証用エンドポイント
 @router.post("/refresh")
 def refresh_token(
-    request: Request,
+    refresh_token: str = Depends(oauth2_scheme),
 ):
-    refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         return credentials_exception("リフレッシュトークンがありません")
     payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -70,7 +74,10 @@ def refresh_token(
         data={"sub": username}, expires_delta=access_token_expires
     )
     return TokenWithUsername(
-        access_token=new_access_token, token_type="bearer", username=username
+        access_token=new_access_token,
+        refresh_token=None,
+        token_type="bearer",
+        username=username,
     )
 
 

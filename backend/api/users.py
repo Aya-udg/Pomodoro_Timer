@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from sqlmodel import Session, select
 from models.settings import engine
 import os
-from models.models import User, TokenWithUsername, TokenData
+from models.models import User, TokenData
 from datetime import datetime, timedelta, timezone
 
 
@@ -79,7 +79,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-# リフレッシュトークンの生成関数（作成））
+# リフレッシュトークンの生成関数（作成）
 def create_refresh_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
