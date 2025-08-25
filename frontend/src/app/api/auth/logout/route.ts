@@ -19,9 +19,13 @@ export async function POST() {
         Authorization: `Bearer ${token}`,
       },
     });
-    const response = NextResponse.json({ message: "ログアウトしました" });
-    response.cookies.delete("token");
-    response.cookies.delete("refresh_token");
-    return response;
+    if (!res.ok) {
+      return NextResponse.json({ error: "エラー" }, { status: 500 });
+    } else {
+      const response = NextResponse.json({ message: "ログアウトしました" });
+      response.cookies.delete("token");
+      response.cookies.delete("refresh_token");
+      return response;
+    }
   }
 }

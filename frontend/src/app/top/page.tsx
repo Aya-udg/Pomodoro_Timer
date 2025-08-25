@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-// import { fetchTimerSettings } from "@/lib/fetchTimerSettings";
+import { useState } from "react";
 import { TimerDisplay } from "@/app/components/TimerDisplay";
 import { usePomodoroTimer } from "@/app/components/usePomodoroTimer";
 import { MyTimer } from "@/app/types/index";
@@ -24,14 +23,6 @@ export default function App() {
   const { cuckooClockPlay, fanfarePlay } = useAlarmSound();
   // 初期値
   const [timerSettings, setTimerSettings] = useState<MyTimer>(DEFAULT_TIMER);
-
-  // const fetchData = async () => {
-  //   const data = await fetchTimerSettings();
-  //   setTimerSettings(data);
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const timer = usePomodoroTimer(timerSettings, cuckooClockPlay, fanfarePlay);
 

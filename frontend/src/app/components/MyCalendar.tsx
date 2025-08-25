@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { CalendarOptions } from "@fullcalendar/core"; // 型をインポート
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AddEventDialog from "./AddEventDialog";
 import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 // FullCalendar を動的に読み込む
 const FullCalendar = dynamic(
-  () => import("@fullcalendar/react").then((mod) => mod.default as any),
+  () => import("@fullcalendar/react").then((mod) => mod.default),
   {
     ssr: false,
   }
@@ -29,34 +29,36 @@ export default function MyCalendar() {
 
   const router = useRouter();
 
-  const fetchData = async () => {
-    const res = await getSchedule();
-    if (res.status === 401) {
-      if (res.error === "トークンの有効期限切れです") {
-        toast.error(res.error);
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
+  const fetchData = useCallback(() => {
+    async () => {
+      const res = await getSchedule();
+      if (res.status === 401) {
+        if (res.error === "トークンの有効期限切れです") {
+          toast.error(res.error);
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500);
+        }
       }
-    }
-    if (res.data) {
-      setEvents(
-        res.data.map((item: Schedule) => ({
-          title: item.title,
-          start: item.start,
-          end: item.end,
-          id: item.id,
-          color: item.color,
-          extendedProps: {
-            timer: item.timer,
-            completed: item.completed,
-            description: item.description,
-            memo: item.memo,
-          },
-        }))
-      );
-    }
-  };
+      if (res.data) {
+        setEvents(
+          res.data.map((item: Schedule) => ({
+            title: item.title,
+            start: item.start,
+            end: item.end,
+            id: item.id,
+            color: item.color,
+            extendedProps: {
+              timer: item.timer,
+              completed: item.completed,
+              description: item.description,
+              memo: item.memo,
+            },
+          }))
+        );
+      }
+    };
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -109,7 +111,7 @@ export default function MyCalendar() {
     <div className="p-4">
       <Toaster />
 
-      <FullCalendar {...(calendarOptions as any)} />
+      <FullCalendar {...calendarOptions} />
 
       <AddEventDialog
         onSuccess={handleSuccess}
