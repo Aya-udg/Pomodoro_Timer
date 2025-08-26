@@ -16,13 +16,10 @@ export async function DELETE(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ id: id }),
   });
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  } else {
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+  else {
     const data = await res.json();
-    console.log(data);
     return NextResponse.json({ data }, { status: 200 });
   }
 }
@@ -42,11 +39,9 @@ export async function PUT(
     },
     body: JSON.stringify(body),
   });
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  } else {
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+  else {
     const data = await res.json();
-    console.log(data);
     return NextResponse.json({ data }, { status: 200 });
   }
 }

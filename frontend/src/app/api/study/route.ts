@@ -20,17 +20,9 @@ export async function GET() {
     },
   });
   const data = await res.json();
-  if (res.status == 401) {
-    if (data.detail.code === "トークンの有効期限切れです") {
-      cookieStore.delete("token");
-      return NextResponse.json({ error: data.detail.code }, { status: 401 });
-    } else if (data.detail.code === "ユーザーが見つかりません") {
-      return NextResponse.json({ error: data.detail.code }, { status: 401 });
-    }
-  }
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  }
+  if (res.status == 401)
+    return NextResponse.json({ error: data.detail.code }, { status: 401 });
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
   return NextResponse.json({ data }, { status: 200 });
 }
 
@@ -41,7 +33,7 @@ export async function POST(request: NextRequest) {
   if (!token) {
     return NextResponse.json(
       { error: "ログインしていません" },
-      { status: 401 } 
+      { status: 401 }
     );
   }
   const res = await fetch(`${DB_URL}/studyhistory/pos`, {
@@ -53,9 +45,9 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify(record),
   });
 
-  if (!res.ok) {
-    return NextResponse.json({ error }, { status: 500 });
-  }
   const data = await res.json();
+  if (res.status == 401)
+    return NextResponse.json({ error: data.detail.code }, { status: 401 });
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
   return NextResponse.json({ data }, { status: 200 });
 }

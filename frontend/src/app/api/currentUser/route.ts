@@ -6,14 +6,12 @@ const DB_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-
   if (!token) {
     return NextResponse.json(
       { error: "ログインしていません" },
       { status: 401 }
     );
   }
-
   const res = await fetch(`${DB_URL}/users/me/`, {
     method: "GET",
     headers: {
@@ -48,12 +46,10 @@ export async function GET() {
         });
         return NextResponse.json({ username: data.username }, { status: 200 });
       }
-    } else if (data.detail.code === "ユーザーが見つかりません") {
+    } else if (data.detail.code === "ユーザーが見つかりません")
       return NextResponse.json({ error: data.detail.code }, { status: 401 });
-    }
   }
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  }
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+
   return NextResponse.json({ data }, { status: 200 });
 }

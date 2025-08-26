@@ -32,7 +32,6 @@ export default function SignupForm() {
       body: JSON.stringify(data),
     });
     const result = await res.json();
-    console.log(result);
     if (res.ok) {
       toast.success("ユーザー登録が完了しました！ログインしてください");
     } else {
