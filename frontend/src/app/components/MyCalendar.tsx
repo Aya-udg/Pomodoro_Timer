@@ -29,36 +29,27 @@ export default function MyCalendar() {
 
   const router = useRouter();
 
-  const fetchData = useCallback(() => {
-    async () => {
-      const res = await getSchedule();
-      if (res.status === 401) {
-        if (res.error === "トークンの有効期限切れです") {
-          toast.error(res.error);
-          setTimeout(() => {
-            router.push("/login");
-          }, 1500);
-        }
-      }
-      if (res.data) {
-        setEvents(
-          res.data.map((item: Schedule) => ({
-            title: item.title,
-            start: item.start,
-            end: item.end,
-            id: item.id,
-            color: item.color,
-            extendedProps: {
-              timer: item.timer,
-              completed: item.completed,
-              description: item.description,
-              memo: item.memo,
-            },
-          }))
-        );
-      }
-    };
-  }, []);
+  const fetchData = useCallback(async () => {
+    const res = await getSchedule();
+    if (res.status === 401) return;
+    if (res.data) {
+      setEvents(
+        res.data.map((item: Schedule) => ({
+          title: item.title,
+          start: item.start,
+          end: item.end,
+          id: item.id,
+          color: item.color,
+          extendedProps: {
+            timer: item.timer,
+            completed: item.completed,
+            description: item.description,
+            memo: item.memo,
+          },
+        }))
+      );
+    }
+  }, [router]);
 
   useEffect(() => {
     fetchData();

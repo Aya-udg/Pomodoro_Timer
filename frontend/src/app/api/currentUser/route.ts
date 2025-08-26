@@ -6,12 +6,14 @@ const DB_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
+
   if (!token) {
     return NextResponse.json(
       { error: "ログインしていません" },
       { status: 401 }
     );
   }
+
   const res = await fetch(`${DB_URL}/users/me/`, {
     method: "GET",
     headers: {
@@ -23,7 +25,6 @@ export async function GET() {
   if (res.status == 401) {
     if (data.detail.code === "トークンの有効期限切れです") {
       // リフレッシュトークンの検証
-      const cookieStore = await cookies();
       const refresh_token = cookieStore.get("refresh_token")?.value;
       const res = await fetch(`${DB_URL}/refresh`, {
         method: "POST",
@@ -32,7 +33,6 @@ export async function GET() {
           Authorization: `Bearer ${refresh_token}`,
         },
       });
-      console.log(res);
       if (!res.ok) {
         // 古いアクセストークンの削除
         cookieStore.delete("token");
@@ -46,7 +46,7 @@ export async function GET() {
           path: "/",
           httpOnly: true,
         });
-        return NextResponse.json({ data }, { status: 200 });
+        return NextResponse.json({ username: data.username }, { status: 200 });
       }
     } else if (data.detail.code === "ユーザーが見つかりません") {
       return NextResponse.json({ error: data.detail.code }, { status: 401 });

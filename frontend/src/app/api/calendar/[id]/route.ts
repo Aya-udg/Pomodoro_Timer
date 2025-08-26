@@ -7,7 +7,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = (await params).id
+  const { id } = await params;
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   const res = await fetch(`${DB_URL}/schedule-delete/${id}`, {

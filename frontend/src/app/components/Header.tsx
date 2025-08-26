@@ -38,13 +38,19 @@ export default function Header() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/currentuser");
-      if (res.ok) {
-        const result = await res.json();
+      const result = await res.json();
+      if (res.ok && username === "") {
         setUsername(result.data.username);
+      } else if (result.error === "再ログインしてください") {
+        setUsername("");
+        toast.error(result.error);
+        setTimeout(() => {
+          router.push("/top");
+        }, 1500);
       }
     };
     fetchData();
-  }, [setUsername]);
+  }, []);
 
   return (
     <>

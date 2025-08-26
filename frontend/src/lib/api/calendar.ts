@@ -1,11 +1,12 @@
 import { TodoFormData } from "@/app/types/index";
 import { Schedule } from "@/app/types/index";
+import { error } from "console";
 
 export async function getSchedule() {
   const res = await fetch("/api/calendar");
   const result = await res.json();
   if (res.status === 401)
-    return { ok: false, status: res.status,error:result.error};
+    return { ok: false, status: res.status, error: result.error };
   return result;
 }
 
@@ -19,7 +20,7 @@ export async function postSchedule(data: TodoFormData) {
   });
   const result = await res.json();
   if (res.status === 401)
-    return { ok: false, status: res.status,error:result.error};
+    return { ok: false, status: res.status, error: result.error };
   return result;
 }
 
