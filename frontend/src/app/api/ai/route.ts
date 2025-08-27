@@ -33,12 +33,8 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-  if (!token) {
-    return NextResponse.json(
-      { error: "ログインしていません" },
-      { status: 401 }
-    );
-  }
+  if (!token) return 
+
   const res = await fetch(`${DB_URL}/chats_history`, {
     headers: {
       Authorization: `Bearer ${token}`,

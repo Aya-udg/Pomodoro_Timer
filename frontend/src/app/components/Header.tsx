@@ -30,24 +30,22 @@ export default function Header() {
       setTimeout(() => {
         router.push("/top");
       }, 1500);
-    } else {
-      toast.error("ログインしていません");
-    }
+    } else toast.error("ログインしていません");
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/currentuser");
       const result = await res.json();
-      if (res.ok && username === "") {
-        setUsername(result.data.username);
+      if (res.ok) {
+        setUsername(result.data?.username);
       } else if (result.error === "再ログインしてください") {
         setUsername("");
         toast.error(result.error);
         setTimeout(() => {
           router.push("/top");
         }, 1500);
-      }
+      } else toast.error(result.error);
     };
     fetchData();
   }, []);
