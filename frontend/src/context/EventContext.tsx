@@ -3,13 +3,28 @@
 import React, { createContext, useState, useContext } from "react";
 import { Schedule } from "@/app/types/index";
 
-type EventType = any;
+type EventType = {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  completed: boolean;
+  description: string;
+  timer: number;
+  color: string;
+  extendedProps: {
+    timer: number;
+    completed: boolean;
+    description: string;
+    memo?: string;
+  };
+};
 
 // 登録・更新した予定を即座に変更させる用
 type ScheduleContextType = {
   // イベント一覧
   events: EventType[];
-  setEvents: React.Dispatch<React.SetStateAction<any[]>>;
+  setEvents: React.Dispatch<React.SetStateAction<EventType[]>>;
   // 選択した予定
   selectedEvent: Schedule | null;
   setSelectedEvent: React.Dispatch<React.SetStateAction<Schedule | null>>;
