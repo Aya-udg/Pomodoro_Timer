@@ -1,6 +1,5 @@
 import { TodoFormData } from "@/app/types/index";
 import { Schedule } from "@/app/types/index";
-import { error } from "console";
 
 export async function getSchedule() {
   const res = await fetch("/api/calendar");

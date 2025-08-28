@@ -44,7 +44,6 @@ export default function ChartClient() {
       }
     };
     fecthData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ユーザーが選択した日の1週間前の日付を取得

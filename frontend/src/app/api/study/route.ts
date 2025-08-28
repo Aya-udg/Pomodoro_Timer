@@ -1,4 +1,3 @@
-import { error } from "console";
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
 

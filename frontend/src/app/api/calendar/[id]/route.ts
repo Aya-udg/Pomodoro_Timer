@@ -26,12 +26,13 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   const body = await request.json();
-  const res = await fetch(`${DB_URL}/schedule-update/${params.id}`, {
+  const res = await fetch(`${DB_URL}/schedule-update/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

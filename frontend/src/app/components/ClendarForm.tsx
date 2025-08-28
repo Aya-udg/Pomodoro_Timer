@@ -45,19 +45,26 @@ export default function ClendarForm({
 
   // 情報更新
   const onUpdate = async (data: TodoFormData) => {
-    const updateData: UpdateTodoFormData = {
-      ...data,
-      id: selectedEvent?.id ?? "",
-      description: data.title,
-      timer: 25,
-      completed: false,
-    };
-    await updateSchedule(updateData);
-    onOpenChange(false); //ダイアログを閉じる
-    reset(); // フォーム初期化
-    const events_list = await getSchedule();
-    setEvents(events_list);
-    onSuccess("更新しました");
+    if (!username) {
+      onError("ログインしてください");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
+    } else {
+      const updateData: UpdateTodoFormData = {
+        ...data,
+        id: selectedEvent?.id ?? "",
+        description: data.title,
+        timer: 25,
+        completed: false,
+      };
+      await updateSchedule(updateData);
+      onOpenChange(false); //ダイアログを閉じる
+      reset(); // フォーム初期化
+      const events_list = await getSchedule();
+      setEvents(events_list);
+      onSuccess("更新しました");
+    }
   };
 
   // 更新に失敗したとき
