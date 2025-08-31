@@ -45,10 +45,11 @@ export default function Header() {
         setTimeout(() => {
           router.push("/top");
         }, 1500);
-      } else toast.error(result.error);
+      } else if (result.error === "ログインしていません") return;
+      else toast.error(result.error);
     };
     fetchData();
-  }, []);
+  }, [router]);
 
   return (
     <>

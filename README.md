@@ -75,3 +75,6 @@
 | ACCESS_TOKEN_EXPIRE_MINUTES   | アクセストークンの有効期限   |
 | GROQ_API_KEY   | GroqのAPIキー   |
 
+## 今後追加予定の機能
+- タイマー設定の保存
+

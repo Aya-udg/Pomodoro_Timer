@@ -17,6 +17,7 @@ import { Inputs, FormValues } from "@/app/types/index";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "../userStore";
+import { useEffect } from "react";
 
 export default function LoginForm() {
   const {
@@ -27,7 +28,11 @@ export default function LoginForm() {
     resolver: zodResolver(Inputs),
   });
 
-  const { setUsername } = useUserStore();
+  const { setUsername, username } = useUserStore();
+
+  useEffect(() => {
+    if (!username) toast.error("ログインしてください");
+  }, []);
 
   const router = useRouter();
 

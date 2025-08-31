@@ -12,7 +12,13 @@ export default function app() {
             </h1>
           </div>
           <div className="flex justify-center items-center mb-15">
-            <Image src="/ai_icon.gif" alt="logo" width={300} height={300} />
+            <Image
+              src="/ai_icon.gif"
+              alt="logo"
+              width={300}
+              height={300}
+              unoptimized
+            />
             <p className="font-dotgothic text-2xl text-center ml-10 border-amber-200 bg-amber-200 rounded-3xl inline-block py-4 px-8">
               Hello!
             </p>
