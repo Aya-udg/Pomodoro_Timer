@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-// import { fetchTimerSettings } from "@/lib/fetchTimerSettings";
+import { useState } from "react";
 import { TimerDisplay } from "@/app/components/TimerDisplay";
 import { usePomodoroTimer } from "@/app/components/usePomodoroTimer";
 import { MyTimer } from "@/app/types/index";
@@ -20,18 +19,10 @@ const DEFAULT_TIMER: MyTimer = {
   longBreakTime: 900,
 };
 
-export default function app() {
+export default function App() {
   const { cuckooClockPlay, fanfarePlay } = useAlarmSound();
   // 初期値
   const [timerSettings, setTimerSettings] = useState<MyTimer>(DEFAULT_TIMER);
-
-  // const fetchData = async () => {
-  //   const data = await fetchTimerSettings();
-  //   setTimerSettings(data);
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const timer = usePomodoroTimer(timerSettings, cuckooClockPlay, fanfarePlay);
 
@@ -61,10 +52,12 @@ export default function app() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <p>タイマー、カレンダーは会員登録なしで使用できます</p>
-        <p>
-          ※勉強時間の記録・スケジュールの登録・AIとのチャットは非会員の方は利用できません
-        </p>
+        <div className="mt-10 text-center">
+          <p>タイマー、カレンダーは会員登録なしで使用できます</p>
+          <p>
+            ※勉強時間の記録・スケジュールの登録・AIとのチャットは非会員の方は利用できません
+          </p>
+        </div>
       </div>
     </>
   );
