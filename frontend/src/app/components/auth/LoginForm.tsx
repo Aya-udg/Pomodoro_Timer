@@ -28,11 +28,7 @@ export default function LoginForm() {
     resolver: zodResolver(Inputs),
   });
 
-  const { setUsername, username } = useUserStore();
-
-  useEffect(() => {
-    if (!username) toast.error("ログインしてください");
-  }, []);
+  const { setUsername } = useUserStore();
 
   const router = useRouter();
 
