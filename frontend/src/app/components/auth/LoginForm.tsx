@@ -17,7 +17,6 @@ import { Inputs, FormValues } from "@/app/types/index";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "../userStore";
-import { useEffect } from "react";
 
 export default function LoginForm() {
   const {
