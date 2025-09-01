@@ -10,11 +10,14 @@ export const usePomodoroTimer = (
   cuckooClockPlay: () => void,
   fanfarePlay: () => void
 ) => {
-  const [sessionCount, setSessionCount] = useState(0); // 4回でロング休憩
+  // 4回でロング休憩
+  const [sessionCount, setSessionCount] = useState(0);
+  //タイマーの状態
   const [timerType, setTimerType] = useState<"timer" | "break" | "longbreak">(
     "timer"
-  ); //タイマーの状態
+  );
   const { username } = useUserStore();
+
   const getExpiryTime = (seconds: number) => {
     const time = new Date();
     time.setSeconds(time.getSeconds() + seconds);
@@ -49,7 +52,7 @@ export const usePomodoroTimer = (
   const endTimer = async () => {
     const posdate: StudyHistory = {
       date: date,
-      duration:workTime,
+      duration: workTime,
       username: username!,
     };
     console.log("現在のタイマータイプ:", timerType, posdate);
@@ -57,11 +60,14 @@ export const usePomodoroTimer = (
 
     if (timerType === "timer") {
       fanfarePlay();
-      const  newCount = sessionCount + 1;
+      const newCount = sessionCount + 1;
       setSessionCount(newCount);
       console.log(posdate);
       // ユーザー登録していたらDBに保存
-      username && postStudyHistory(posdate);
+      const res = await fetch("/api/currentuser");
+      if (res.ok) {
+        postStudyHistory(posdate);
+      }
 
       if (newCount % 4 === 0) {
         setTimerType("longbreak");

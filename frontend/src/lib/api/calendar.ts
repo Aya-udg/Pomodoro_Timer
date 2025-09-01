@@ -2,16 +2,11 @@ import { TodoFormData } from "@/app/types/index";
 import { Schedule } from "@/app/types/index";
 
 export async function getSchedule() {
-  const res = await fetch("/api/calendar", {
-    method: "GET",
-  });
-  if (res.status === 401) return;
-  if (!res.ok) {
-    console.error("データの取得に失敗しました", res.status);
-    return [];
-  }
-  const resData = await res.json();
-  return resData;
+  const res = await fetch("/api/calendar");
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status, error: result.error };
+  return result;
 }
 
 export async function postSchedule(data: TodoFormData) {
@@ -22,9 +17,10 @@ export async function postSchedule(data: TodoFormData) {
     },
     body: JSON.stringify(data),
   });
-  if (res.status === 401) return;
-  const resData = await res.json();
-  return resData;
+  const result = await res.json();
+  if (res.status === 401)
+    return { ok: false, status: res.status, error: result.error };
+  return result;
 }
 
 // idはURLに渡す
@@ -35,8 +31,8 @@ export async function deleteSchedule(id: string) {
   if (!res.ok) {
     console.log("削除に失敗しました");
   }
-  const resData = await res.json();
-  return resData;
+  const result = await res.json();
+  return result;
 }
 
 export async function updateSchedule(schedule: Schedule): Promise<Schedule[]> {
@@ -51,7 +47,6 @@ export async function updateSchedule(schedule: Schedule): Promise<Schedule[]> {
   if (!res.ok) {
     console.log("更新に失敗しました");
   }
-  const resData = await res.json();
-  console.log(resData);
-  return resData;
+  const result = await res.json();
+  return result;
 }

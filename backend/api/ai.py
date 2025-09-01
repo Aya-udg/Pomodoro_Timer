@@ -4,7 +4,7 @@ from pydantic_ai import Agent
 from pydantic_ai.models.groq import GroqModel
 from pydantic_ai.providers.groq import GroqProvider
 from fastapi import APIRouter, Depends
-from sqlmodel import Session
+from sqlmodel import Session, select
 from models.settings import engine
 from .users import get_current_active_user
 from models.models import User, AIRequest, Chats
@@ -27,12 +27,12 @@ model = GroqModel(
 )
 agent = Agent(
     model,
-    system_prompt="相手を前向きに褒めるコーチ。必ず根拠を1つ入れること。語尾には絵文字もつけること",
+    system_prompt="相手を前向きに褒める優しい怪獣。敬語は使わない。必ず根拠を1つ入れること。語尾には絵文字もつけること",
 )
 
 
 @router.post("/ai", response_model=Chats)
-def test(
+def post_chat(
     payload: AIRequest,
     user: User = Depends(get_current_active_user),
     session: Session = Depends(get_session),
@@ -48,3 +48,18 @@ def test(
     session.commit()
     session.refresh(new_chat)
     return new_chat
+
+
+@router.get("/chats_history")
+def get_chat(
+    user: User = Depends(get_current_active_user),
+    session: Session = Depends(get_session),
+):
+    statement = (
+        select(Chats)
+        .where(Chats.user_id == user.id)
+        .order_by(Chats.id.desc())
+        .limit(10)
+    )
+    results = session.exec(statement).all()
+    return results

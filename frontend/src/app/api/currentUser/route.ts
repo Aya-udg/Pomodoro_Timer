@@ -8,8 +8,8 @@ export async function GET() {
   const token = cookieStore.get("token")?.value;
   if (!token) {
     return NextResponse.json(
-      { message: "認証に失敗しました", code: "no_token" },
-      { status: 401, headers: { "WWW-Authenticate": "Bearer" } }
+      { error: "ログインしていません" },
+      { status: 401 }
     );
   }
   const res = await fetch(`${DB_URL}/users/me/`, {
@@ -19,14 +19,37 @@ export async function GET() {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(res)
-   if (res.status == 401) {
-    return NextResponse.json({ error: "認証エラーです" }, { status:401 });
-  }
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  }
   const data = await res.json();
-  console.log(data);
+  if (res.status == 401) {
+    if (data.detail.code === "トークンの有効期限切れです") {
+      // リフレッシュトークンの検証
+      const refresh_token = cookieStore.get("refresh_token")?.value;
+      const res = await fetch(`${DB_URL}/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${refresh_token}`,
+        },
+      });
+      if (!res.ok) {
+        // 古いアクセストークンの削除
+        cookieStore.delete("token");
+        return NextResponse.json(
+          { error: "再ログインしてください" },
+          { status: 401 }
+        );
+      } else {
+        const data = await res.json();
+        cookieStore.set("token", data.access_token, {
+          path: "/",
+          httpOnly: true,
+        });
+        return NextResponse.json({ username: data.username }, { status: 200 });
+      }
+    } else if (data.detail.code === "ユーザーが見つかりません")
+      return NextResponse.json({ error: data.detail.code }, { status: 401 });
+  }
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+
   return NextResponse.json({ data }, { status: 200 });
 }

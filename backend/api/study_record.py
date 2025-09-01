@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Depends, APIRouter, status
 from sqlmodel import Session, select
 from models.settings import engine
-from models.models import Timer, StudyHistory, User
+from models.models import StudyHistory, User
 from sqlalchemy import func
 from .users import get_current_active_user
 
@@ -13,16 +13,6 @@ def get_session():
 
 
 router = APIRouter()
-
-
-# タイマー設定のデータ取得
-@router.get("/timer")
-def read_timer_settings(session: Session = Depends(get_session)):
-    statement = select(Timer)
-    results = session.exec(statement).all()
-    if not results:
-        raise HTTPException(status_code=404, detail="データが存在しません")
-    return results
 
 
 # 同日の勉強データをまとめた勉強データの取得
@@ -47,26 +37,6 @@ def read_study_history_day(
     return [{"date": row[0], "duration": row[1]} for row in results]
 
 
-# タグごとにまとめた勉強データの取得
-@router.post("/studyhistory/summary-by-tag")
-def read_study_history_tag(
-    username: str,
-    session: Session = Depends(get_session),
-    user: User = Depends(get_current_active_user),
-):
-    statement = (
-        select(StudyHistory.tag, func.sum(StudyHistory.duration).label("total_minutes"))
-        .where(StudyHistory.user_id == user.id)
-        .group_by(StudyHistory.tag)
-    )
-    results = session.exec(statement).all()
-    if not results:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="勉強履歴がありません"
-        )
-    return [{"tag": row[0], "duration": row[1]} for row in results]
-
-
 # 勉強データ追加
 @router.post("/studyhistory/pos", response_model=StudyHistory)
 def add_study_history(
@@ -83,6 +53,5 @@ def add_study_history(
     )
     session.add(data)
     session.commit()
-    # これ大事
     session.refresh(data)
     return history

@@ -9,8 +9,8 @@ export async function POST(request: NextRequest) {
 
   if (!token) {
     return NextResponse.json(
-      { message: "認証に失敗しました", code: "no_token" },
-      { status: 401, headers: { "WWW-Authenticate": "Bearer" } }
+      { error: "ログインしていません" },
+      { status: 401 }
     );
   }
   const body = await request.json();
@@ -28,4 +28,21 @@ export async function POST(request: NextRequest) {
     const data = await res.json();
     return NextResponse.json({ data }, { status: 200 });
   }
+}
+
+export async function GET() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  if (!token) return 
+
+  const res = await fetch(`${DB_URL}/chats_history`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  if (res.status == 401) return NextResponse.json({ error: data.detail.code }, { status: 401 });
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+
+  return NextResponse.json({ data }, { status: 200 });
 }

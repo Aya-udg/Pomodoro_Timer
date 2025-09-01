@@ -11,6 +11,7 @@ import {
   LabelList,
 } from "recharts";
 import { StudyHistory } from "@/app/types/index";
+import Image from "next/image";
 
 type Props = {
   studydata: StudyHistory[];
@@ -19,7 +20,6 @@ type Props = {
 };
 
 export function SimpleLineChart({ choiceDay, studydata, oneWeekAgo }: Props) {
-
   // 1週間分のデータをグラフ化
   const data = studydata.flatMap((v) => {
     const targetDate = new Date(v.date);
@@ -32,24 +32,38 @@ export function SimpleLineChart({ choiceDay, studydata, oneWeekAgo }: Props) {
 
   return (
     <>
-      <div className="flex flex-col">
-        <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
-        <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
-        <BarChart width={400} height={400} data={data}>
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip
-            formatter={(value: number) =>
-              `${
-                Math.floor(value / 60) ? `${Math.floor(value / 60)}時間` : ""
-              }${value % 60} 分`
-            }
-          />
-          <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
-          <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
-            <LabelList position="top" dataKey="集中時間" />
-          </Bar>
-        </BarChart>
+      <div className="flex flex-col w-full">
+        <div className="flex justify-center mb-10">
+          <div className="lg:w-[150px] w-[100px]">
+            <Image src="/ai_icon.png" alt="logo" width={150} height={150} />
+          </div>
+          <div className="self-center border-amber-100 bg-gray-100 rounded-3xl px-8 py-4">
+            <h1 className="text-center">{oneWeekAgo.toLocaleDateString()}</h1>
+            <h1 className="text-center">{choiceDay.toLocaleDateString()}</h1>
+            <p>の勉強時間を表示しているよ</p>
+          </div>
+        </div>
+        <div className="w-full h-full flex justify-center">
+          <ResponsiveContainer width="80%" height={300}>
+            <BarChart data={data}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip
+                formatter={(value: number) =>
+                  `${
+                    Math.floor(value / 60)
+                      ? `${Math.floor(value / 60)}時間`
+                      : ""
+                  }${value % 60} 分`
+                }
+              />
+              <CartesianGrid stroke="#CCC" strokeDasharray="5 5" />
+              <Bar dataKey="集中時間" fill="#1564b3" barSize={40}>
+                <LabelList position="top" dataKey="集中時間" />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </>
   );

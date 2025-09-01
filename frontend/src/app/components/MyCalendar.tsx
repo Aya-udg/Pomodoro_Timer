@@ -5,15 +5,16 @@ import toast, { Toaster } from "react-hot-toast";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { CalendarOptions } from "@fullcalendar/core"; // 型をインポート
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AddEventDialog from "./AddEventDialog";
 import { getSchedule } from "@/lib/api/calendar";
 import { useSchedule } from "@/context/EventContext";
 import { Schedule } from "@/app/types/index";
+import { useRouter } from "next/navigation";
 
 // FullCalendar を動的に読み込む
 const FullCalendar = dynamic(
-  () => import("@fullcalendar/react").then((mod) => mod.default as any),
+  () => import("@fullcalendar/react").then((mod) => mod.default),
   {
     ssr: false,
   }
@@ -26,11 +27,14 @@ export default function MyCalendar() {
   const { events, setEvents, setSelectedEvent, setSelectedDate } =
     useSchedule();
 
-  const fetchData = async () => {
+  const router = useRouter();
+
+  const fetchData = useCallback(async () => {
     const res = await getSchedule();
-    if (res) {
+    if (res.status === 401) return;
+    if (res.data) {
       setEvents(
-        res.map((item: Schedule) => ({
+        res.data.map((item: Schedule) => ({
           title: item.title,
           start: item.start,
           end: item.end,
@@ -45,7 +49,7 @@ export default function MyCalendar() {
         }))
       );
     }
-  };
+  }, [router]);
 
   useEffect(() => {
     fetchData();
@@ -80,7 +84,6 @@ export default function MyCalendar() {
         memo: event.extendedProps.memo,
       };
       setSelectedEvent(selected);
-      console.log(selected);
       setSelectedDate(selected.start);
       setOpen(true);
     },
@@ -98,7 +101,7 @@ export default function MyCalendar() {
   return (
     <div className="p-4">
       <Toaster />
-      <FullCalendar {...(calendarOptions as any)} />
+      <FullCalendar {...calendarOptions} />
       <AddEventDialog
         onSuccess={handleSuccess}
         onError={handleError}

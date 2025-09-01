@@ -17,17 +17,13 @@ export async function GET() {
       Authorization: `Bearer ${token}`,
     },
   });
-  if (res.status == 401) {
-    return NextResponse.json({ error: "認証エラーです" }, { status: 401 });
-  }
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  }
   const data = await res.json();
-  console.log(data);
+  if (res.status === 401)
+    return NextResponse.json({ error: data.detail.code }, { status: 401 });
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+
   return NextResponse.json({ data }, { status: 200 });
 }
-
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
@@ -47,14 +43,11 @@ export async function POST(request: NextRequest) {
     },
     body: JSON.stringify(body),
   });
-  if (res.status == 401) {
-    return NextResponse.json({ error: "認証エラーです" }, { status: 401 });
-  }
-  if (!res.ok) {
-    return NextResponse.json({ error: "エラー" }, { status: 500 });
-  }
   const data = await res.json();
-  console.log(data);
-  return NextResponse.json({ data }, { status: 200 });
-  }
+  if (res.status === 401)
+    return NextResponse.json({ error: data.detail.code }, { status: 401 });
 
+  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+
+  return NextResponse.json({ data }, { status: 200 });
+}

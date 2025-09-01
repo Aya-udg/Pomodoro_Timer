@@ -61,6 +61,15 @@
   @apply bg-red-600;
 }
 
+.responsive-text {
+  @apply sm:text-sm lg:text-base;
+}
+
+.heading-text{
+  @apply sm:text-xl
+}
+
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
