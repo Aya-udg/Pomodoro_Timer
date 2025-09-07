@@ -12,8 +12,8 @@ FROM base AS runner
 WORKDIR /app
 
 COPY --from=builder /app/.next/standalone/ ./.next/standalone
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/static ./.next/standalone/.next/static
+COPY --from=builder /app/public ./.next/standalone/public
 
 
 CMD ["node", ".next/standalone/server.js"]
