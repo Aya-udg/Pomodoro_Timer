@@ -65,44 +65,51 @@ export default function ChartClient() {
   return (
     <>
       <Toaster />
-      <div className="pt-10 sm:pt-30">
-        <div className="flex justify-center mb-10">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">日付の設定</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <p>見たい日を選んでください</p>
-              <input type="date" onChange={handleChange} />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="flex justify-center mb-10">
-          <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-            <p className="text-center">週の集中時間</p>
-            <p className="text-2xl text-center text-blue-700">
-              {Math.floor(weekData / 3600)}時間
-              {Math.floor(weekData / 60) % 60}分
-            </p>
+      {studydata ? (
+        <div className="pt-10 sm:pt-30">
+          <div className="flex justify-center mb-10">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">日付の設定</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <p>見たい日を選んでください</p>
+                <input type="date" onChange={handleChange} />
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-            <p className="text-center">累計集中時間</p>
-            <p className="text-2xl text-center text-blue-700 ">
-              {Math.floor(totalData / 3600)}時間
-              {Math.floor(totalData / 60) % 60}分
-            </p>
+          <div className="flex justify-center mb-10">
+            <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+              <p className="text-center">週の集中時間</p>
+              <p className="text-2xl text-center text-blue-700">
+                {Math.floor(weekData / 3600)}時間
+                {Math.floor(weekData / 60) % 60}分
+              </p>
+            </div>
+            <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+              <p className="text-center">累計集中時間</p>
+              <p className="text-2xl text-center text-blue-700 ">
+                {Math.floor(totalData / 3600)}時間
+                {Math.floor(totalData / 60) % 60}分
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            {studydata && (
+              <SimpleLineChart
+                oneWeekAgo={oneWeekAgo}
+                choiceDay={choiceDay}
+                studydata={studydata}
+              />
+            )}
           </div>
         </div>
-        <div className="flex justify-center">
-          {studydata && (
-            <SimpleLineChart
-              oneWeekAgo={oneWeekAgo}
-              choiceDay={choiceDay}
-              studydata={studydata}
-            />
-          )}
+      ) : (
+        <div className="flex justify-center flex-col mt-15">
+          <p className="font-bold pr-5">404</p>
+          <p className="font-bold">表示できるデータがありません</p>
         </div>
-      </div>
+      )}
     </>
   );
 }
