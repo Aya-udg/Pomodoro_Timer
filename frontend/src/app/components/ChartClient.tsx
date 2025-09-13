@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
 import { getStudyHistoryDay } from "@/lib/api/studyHistory";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "@/app/components/ui/button";
@@ -23,25 +22,11 @@ export default function ChartClient() {
     setChoiceDay(selectday);
   };
 
-  const router = useRouter();
-
-  // トークンの有効期限が切れたときに再ログインを促す
   useEffect(() => {
     const fecthData = async () => {
-      const res = await fetch("/api/currentuser");
-      if (res.ok) {
-        const res = await getStudyHistoryDay();
-        if (res.satus === 401) {
-          toast.error(res.error);
-          setTimeout(() => {
-            router.push("/login");
-          }, 1500);
-          if (res.error) {
-            toast.error("勉強時間が登録されていません");
-          }
-        }
-        setStudydata(res.data);
-      }
+      const res = await getStudyHistoryDay();
+      if (res.error) return toast.error(res.error);
+      setStudydata(res.data);
     };
     fecthData();
   }, []);
@@ -61,11 +46,12 @@ export default function ChartClient() {
   const weekData = weekStudyHistory.reduce((sum, v) => sum + v.duration, 0);
 
   const totalData = studydata.reduce((sum, v) => sum + v.duration, 0);
+  if (!totalData) toast.error("勉強時間が登録されていません");
 
   return (
     <>
       <Toaster />
-      {studydata ? (
+      {totalData ?? (
         <div className="pt-10 sm:pt-30">
           <div className="flex justify-center mb-10">
             <DropdownMenu>
@@ -103,11 +89,6 @@ export default function ChartClient() {
               />
             )}
           </div>
-        </div>
-      ) : (
-        <div className="flex justify-center flex-col mt-15">
-          <p className="font-bold pr-5">404</p>
-          <p className="font-bold">表示できるデータがありません</p>
         </div>
       )}
     </>

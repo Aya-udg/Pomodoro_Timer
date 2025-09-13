@@ -23,6 +23,6 @@ export async function POST(request: NextRequest) {
   const data = await res.json();
   cookieStore.set("token", data.access_token, { httpOnly: true });
   cookieStore.set("refresh_token", data.refresh_token, { httpOnly: true });
-  if (res.ok) return NextResponse.json({ data }, { status: 200 });
-  else return NextResponse.json({ error: data }, { status: 500 });
+  if (!res.ok) return NextResponse.json({ error: data.detail ?? 'エラーが発生しました'}, { status: res.status });
+  return NextResponse.json({ data }, { status: 200 });
 }

@@ -89,7 +89,7 @@ export default function ClendarForm({
       const res = await postSchedule(defaultData);
       onOpenChange(false); //ダイアログを閉じる
       reset(); // フォーム初期化
-      if (res) {
+      if (res.data.id) {
         await getSchedule();
         onSuccess("登録しました");
       } else {

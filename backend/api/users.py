@@ -27,10 +27,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-def credentials_exception(code: str):
+def credentials_exception(message: str):
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail={"message": "認証に失敗しました", "code": code},
+        detail=message,
         headers={"WWW-Authenticate": "Bearer"},
     )
 
