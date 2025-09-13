@@ -5,6 +5,9 @@ services:
       restart: always
       env_file:
         - .env
+      environment:
+        - HOSTNAME=0.0.0.0   # コンテナ外からアクセスできるようにする
+        - PORT=3000   
       networks:
         - app-network
     backend:
@@ -16,7 +19,7 @@ services:
         - frontend/.env.local
       environment:
         - HOSTNAME=0.0.0.0   # コンテナ外からアクセスできるようにする
-        - PORT=3000   
+        - PORT=8000   
       networks:
         - app-network
     db:

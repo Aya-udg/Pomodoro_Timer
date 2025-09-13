@@ -43,6 +43,7 @@ export async function GET() {
         cookieStore.set("token", data.access_token, {
           path: "/",
           httpOnly: true,
+          secure:true,
         });
         return NextResponse.json({ username: data.username }, { status: 200 });
       }
