@@ -19,9 +19,7 @@ export async function GET() {
     },
   });
   const data = await res.json();
-  if (res.status == 401)
-    return NextResponse.json({ error: data.detail.code }, { status: 401 });
-  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+  if (!res.ok) return NextResponse.json({ error: data }, { status: res.status });
   return NextResponse.json({ data }, { status: 200 });
 }
 
@@ -45,8 +43,6 @@ export async function POST(request: NextRequest) {
   });
 
   const data = await res.json();
-  if (res.status == 401)
-    return NextResponse.json({ error: data.detail.code }, { status: 401 });
-  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
+  if (!res.ok) return NextResponse.json({ error: data.detail ?? 'エラーが発生しました'}, { status: res.status });
   return NextResponse.json({ data }, { status: 200 });
 }

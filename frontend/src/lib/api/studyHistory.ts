@@ -5,9 +5,9 @@ export async function getStudyHistoryDay() {
     method: "GET",
   });
   const result = await res.json();
-  if (res.status === 401)
+  if (!res.ok)
     return { ok: false, status: res.status,error:result.error};
-  return result;
+  return { ok: true, status: res.status, data: result.data };
 }
 
 
@@ -19,7 +19,7 @@ export default async function postStudyHistory(record: StudyHistory) {
     body: JSON.stringify(record),
   });
   const result = await res.json();
-  if (res.status === 401)
+  if (!res.ok)
     return { ok: false, status: res.status,error:result.error};
-  return result;
+  return { ok: true, status: res.status, data: result.data };
 }

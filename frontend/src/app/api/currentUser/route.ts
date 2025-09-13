@@ -20,8 +20,8 @@ export async function GET() {
     },
   });
   const data = await res.json();
-  if (res.status == 401) {
-    if (data.detail.code === "トークンの有効期限切れです") {
+  if (res.status === 401) {
+    if (data.detail === "トークンの有効期限切れです") {
       // リフレッシュトークンの検証
       const refresh_token = cookieStore.get("refresh_token")?.value;
       const res = await fetch(`${DB_URL}/refresh`, {
@@ -46,10 +46,9 @@ export async function GET() {
         });
         return NextResponse.json({ username: data.username }, { status: 200 });
       }
-    } else if (data.detail.code === "ユーザーが見つかりません")
-      return NextResponse.json({ error: data.detail.code }, { status: 401 });
+    } else if (data.detail === "ユーザーが見つかりません")
+      return NextResponse.json({ error: data.detail }, { status: 401 });
   }
-  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
-
+  if (!res.ok) return NextResponse.json({ error: data.detail ?? 'エラーが発生しました'}, { status: res.status });
   return NextResponse.json({ data }, { status: 200 });
 }

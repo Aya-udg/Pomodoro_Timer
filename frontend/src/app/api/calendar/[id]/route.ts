@@ -40,9 +40,7 @@ export async function PUT(
     },
     body: JSON.stringify(body),
   });
-  if (!res.ok) return NextResponse.json({ error: "エラー" }, { status: 500 });
-  else {
-    const data = await res.json();
-    return NextResponse.json({ data }, { status: 200 });
-  }
+  const data = await res.json();
+  if (!res.ok) return NextResponse.json({ error: data.detail ?? 'エラーが発生しました'}, { status: res.status });
+  return NextResponse.json({ data }, { status: 200 });
 }

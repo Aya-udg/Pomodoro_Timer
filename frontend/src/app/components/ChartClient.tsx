@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
 import { getStudyHistoryDay } from "@/lib/api/studyHistory";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "@/app/components/ui/button";
@@ -23,25 +22,11 @@ export default function ChartClient() {
     setChoiceDay(selectday);
   };
 
-  const router = useRouter();
-
-  // トークンの有効期限が切れたときに再ログインを促す
   useEffect(() => {
     const fecthData = async () => {
-      const res = await fetch("/api/currentuser");
-      if (res.ok) {
-        const res = await getStudyHistoryDay();
-        if (res.satus === 401) {
-          toast.error(res.error);
-          setTimeout(() => {
-            router.push("/login");
-          }, 1500);
-          if (res.error) {
-            toast.error("勉強時間が登録されていません");
-          }
-        }
-        setStudydata(res.data);
-      }
+      const res = await getStudyHistoryDay();
+      if (res.error) return toast.error(res.error);
+      setStudydata(res.data);
     };
     fecthData();
   }, []);
@@ -61,48 +46,51 @@ export default function ChartClient() {
   const weekData = weekStudyHistory.reduce((sum, v) => sum + v.duration, 0);
 
   const totalData = studydata.reduce((sum, v) => sum + v.duration, 0);
+  if (!totalData) toast.error("勉強時間が登録されていません");
 
   return (
     <>
       <Toaster />
-      <div className="pt-10 sm:pt-30">
-        <div className="flex justify-center mb-10">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">日付の設定</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <p>見たい日を選んでください</p>
-              <input type="date" onChange={handleChange} />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="flex justify-center mb-10">
-          <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-            <p className="text-center">週の集中時間</p>
-            <p className="text-2xl text-center text-blue-700">
-              {Math.floor(weekData / 3600)}時間
-              {Math.floor(weekData / 60) % 60}分
-            </p>
+      {totalData ?? (
+        <div className="pt-10 sm:pt-30">
+          <div className="flex justify-center mb-10">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">日付の設定</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <p>見たい日を選んでください</p>
+                <input type="date" onChange={handleChange} />
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-            <p className="text-center">累計集中時間</p>
-            <p className="text-2xl text-center text-blue-700 ">
-              {Math.floor(totalData / 3600)}時間
-              {Math.floor(totalData / 60) % 60}分
-            </p>
+          <div className="flex justify-center mb-10">
+            <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+              <p className="text-center">週の集中時間</p>
+              <p className="text-2xl text-center text-blue-700">
+                {Math.floor(weekData / 3600)}時間
+                {Math.floor(weekData / 60) % 60}分
+              </p>
+            </div>
+            <div className="flex flex-col font-mono bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 ml-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+              <p className="text-center">累計集中時間</p>
+              <p className="text-2xl text-center text-blue-700 ">
+                {Math.floor(totalData / 3600)}時間
+                {Math.floor(totalData / 60) % 60}分
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            {studydata && (
+              <SimpleLineChart
+                oneWeekAgo={oneWeekAgo}
+                choiceDay={choiceDay}
+                studydata={studydata}
+              />
+            )}
           </div>
         </div>
-        <div className="flex justify-center">
-          {studydata && (
-            <SimpleLineChart
-              oneWeekAgo={oneWeekAgo}
-              choiceDay={choiceDay}
-              studydata={studydata}
-            />
-          )}
-        </div>
-      </div>
+      )}
     </>
   );
 }
