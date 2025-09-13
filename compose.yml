@@ -47,16 +47,6 @@ services:
       networks:
         - app-network
 
-    # certbot:
-    #   image: certbot/certbot:latest
-    #   container_name: certbot
-    #   volumes:
-    #     - /etc/letsencrypt:/etc/letsencrypt
-    #     - ./certbot_webroot:/var/www/html
-    #   command: ["--version"]
-    #   networks:
-    #     - app-network
-
 volumes:
   postgres_data:
 
