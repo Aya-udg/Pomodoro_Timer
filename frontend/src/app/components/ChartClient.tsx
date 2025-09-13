@@ -17,26 +17,28 @@ export default function ChartClient() {
   //  選択した日
   const [choiceDay, setChoiceDay] = useState<Date>(new Date());
 
+  const [loading, setLoading] = useState<boolean>(true);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectday = new Date(e.target.value);
     setChoiceDay(selectday);
   };
 
   useEffect(() => {
-    const fecthData = async () => {
+    const fetchData = async () => {
       const res = await getStudyHistoryDay();
-      if (res.error) return toast.error(res.error);
-      setStudydata(res.data);
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        setStudydata(res.data);
+      }
+      setLoading(false);
     };
-    fecthData();
+    fetchData();
   }, []);
 
   // ユーザーが選択した日の1週間前の日付を取得
   const oneWeekAgo = new Date(choiceDay);
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-  // filterのエラー回避
-  if (!studydata) return;
 
   // 今週の勉強時間
   const weekStudyHistory = studydata.filter((v) => {
@@ -46,12 +48,19 @@ export default function ChartClient() {
   const weekData = weekStudyHistory.reduce((sum, v) => sum + v.duration, 0);
 
   const totalData = studydata.reduce((sum, v) => sum + v.duration, 0);
-  if (!totalData) toast.error("勉強時間が登録されていません");
+
+  useEffect(() => {
+    if (!loading && totalData == 0) {
+      toast.error("勉強時間が登録されていません");
+    }
+  }, [loading, totalData]);
+
+  if (loading) return null;
 
   return (
     <>
       <Toaster />
-      {totalData ?? (
+      {totalData > 0 && (
         <div className="pt-10 sm:pt-30">
           <div className="flex justify-center mb-10">
             <DropdownMenu>
