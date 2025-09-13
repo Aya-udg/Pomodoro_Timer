@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
 
   const res = await fetch(`${DB_URL}/login`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },

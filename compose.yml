@@ -3,36 +3,63 @@ services:
       build: ./frontend
       container_name: frontend
       restart: always
-      ports:
-        - ${FRONTEND_PORT}:3000
       env_file:
         - .env
+      networks:
+        - app-network
     backend:
       build: ./backend
       container_name: backend
       restart: always
-      ports:
-        - ${BACKEND_PORT}:8000
       env_file:
         - .env
         - frontend/.env.local
+      environment:
+        - HOSTNAME=0.0.0.0   # コンテナ外からアクセスできるようにする
+        - PORT=3000   
+      networks:
+        - app-network
     db:
       image: postgres:17
-      container_name: Portfolio
+      container_name: db
       restart: always
       env_file:
         - .env
-      ports:
-        - "${POSTGRES_PORT}:5432"
       volumes:
         - postgres_data:/var/lib/postgresql/data
+      networks:
+        - app-network      
     nginx:
       image: nginx:latest
+      restart: always
+      container_name: nginx
       ports:
         - "80:80"
         - "443:443"
       volumes:
         - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
         - ./frontend/out:/usr/share/nginx/html:ro
+        - /etc/letsencrypt:/etc/letsencrypt
+        - ./certbot_webroot:/var/www/html      
+      depends_on:
+        - frontend
+        - backend
+      networks:
+        - app-network
+
+    # certbot:
+    #   image: certbot/certbot:latest
+    #   container_name: certbot
+    #   volumes:
+    #     - /etc/letsencrypt:/etc/letsencrypt
+    #     - ./certbot_webroot:/var/www/html
+    #   command: ["--version"]
+    #   networks:
+    #     - app-network
+
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
