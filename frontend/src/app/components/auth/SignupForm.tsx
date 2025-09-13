@@ -31,11 +31,11 @@ export default function SignupForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (res.status === 401) return;
     const result = await res.json();
-    if (res.ok)
-      toast.success("ユーザー登録が完了しました！ログインしてください");
-    else toast.error(`ユーザー登録に失敗しました。${result.data.detail}`);
+    if (!res.ok)
+      return toast.error(`ユーザー登録に失敗しました。${result.error}`);
+    else
+      return toast.success("ユーザー登録が完了しました！ログインしてください");
   };
 
   return (

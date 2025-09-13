@@ -36,7 +36,6 @@ export default function Header() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/currentuser");
-      if (res.status === 401) return;
       const result = await res.json();
       if (res.ok) {
         setUsername(result.data?.username);
