@@ -22,21 +22,12 @@ export default function ChartClient() {
     setChoiceDay(selectday);
   };
 
-  useEffect(() => {
-    const fecthData = async () => {
-      const res = await getStudyHistoryDay();
-      if (res.error) return toast.error(res.error);
-      setStudydata(res.data);
-    };
-    fecthData();
-  }, []);
-
   // ユーザーが選択した日の1週間前の日付を取得
   const oneWeekAgo = new Date(choiceDay);
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
   // filterのエラー回避
-  if (!studydata) return;
+  if (!studydata.length) return;
 
   // 今週の勉強時間
   const weekStudyHistory = studydata.filter((v) => {
@@ -46,12 +37,21 @@ export default function ChartClient() {
   const weekData = weekStudyHistory.reduce((sum, v) => sum + v.duration, 0);
 
   const totalData = studydata.reduce((sum, v) => sum + v.duration, 0);
-  if (!totalData) toast.error("勉強時間が登録されていません");
+
+  useEffect(() => {
+    const fecthData = async () => {
+      const res = await getStudyHistoryDay();
+      if (res.error) return toast.error(res.error);
+      setStudydata(res.data);
+    };
+    if (!totalData) toast.error("勉強時間が登録されていません");
+    fecthData();
+  }, []);
 
   return (
     <>
       <Toaster />
-      {totalData ?? (
+      {totalData && (
         <div className="pt-10 sm:pt-30">
           <div className="flex justify-center mb-10">
             <DropdownMenu>
