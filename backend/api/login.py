@@ -84,9 +84,7 @@ def refresh_token(
 # ログアウト用エンドポイント
 @router.post("/logout")
 def logout(response: Response, user: User = Depends(get_current_active_user)):
-    refresh_token = response.delete_cookie("refresh_token")
-    if not refresh_token:
-        raise credentials_exception("リフレッシュトークンがありません")
+    response.delete_cookie("refresh_token")
     return None
 
 
