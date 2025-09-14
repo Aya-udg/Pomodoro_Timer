@@ -49,6 +49,7 @@ export default function ChartClient() {
 
   const totalData = studydata.reduce((sum, v) => sum + v.duration, 0);
 
+  // ロード後にトースト表示
   useEffect(() => {
     if (!loading && totalData == 0) {
       toast.error("勉強時間が登録されていません");
