@@ -28,6 +28,7 @@ export default function ChartClient() {
       const res = await getStudyHistoryDay();
       if (res.error) {
         toast.error(res.error);
+        setStudydata([]);
       } else {
         setStudydata(res.data);
       }

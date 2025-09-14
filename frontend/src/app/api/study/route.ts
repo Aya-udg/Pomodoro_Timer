@@ -19,7 +19,7 @@ export async function GET() {
     },
   });
   const data = await res.json();
-  if (!res.ok) return NextResponse.json({ error: data }, { status: res.status });
+  if (!res.ok) return NextResponse.json({ error: data?.detail ?? 'エラーが発生しました' }, { status: res.status });
   return NextResponse.json({ data }, { status: 200 });
 }
 
