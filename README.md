@@ -2,7 +2,16 @@
 <img src="frontend/public/ai_icon.gif">  
 
 ## URL
+https://pomodoro-tools.com/
 
+### ⚠️ご利用上の注意（AI機能の利用は必要最低限でお願いします）
+- 本アプリにはAI（Chat機能など）を活用した機能があります。
+- この機能の利用には外部APIを経由しており、一定の使用量を超えると開発者側に課金が発生します。
+
+#### お願い
+- AI機能のご利用は必要最小限でお願いします。
+- 特に、連続で大量の質問やリクエストを送る行為はご遠慮ください。
+- 無料提供中のため、みなさまのご配慮をお願いします。
 
 ## 開発背景
 未経験からエンジニアを目指すにあたり、個人開発をすることにしました。  
@@ -20,6 +29,22 @@
 
 - その他  
 <img src="https://img.shields.io/badge/-Docker-EEE.svg?logo=docker&style=flat">
+
+
+## 🏗 インフラ構成
+
+本アプリは以下の構成でデプロイされています：
+
+- **VPS**：さくらのVPS(Rocky Linux)
+- **Docker Compose** を用いて以下をコンテナで管理：
+  - Frontend（Next.js）
+  - Backend（FastAPI）
+  - Database（PostgreSQL）
+  - Nginx（リバースプロキシとして）
+- **HTTPS対応**：Let's Encrypt（certbot）にてSSL証明書を取得
+- **ドメイン管理**：ムームードメインを使用
+
+
 
 ## 主な機能
 
