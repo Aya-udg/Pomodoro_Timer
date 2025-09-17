@@ -94,16 +94,18 @@ export default function Header() {
 
         {/* モバイル用メニュー */}
         <div className="md:hidden flex justify-end items-center bg-[#FFFFF4]">
-          <p className="responsive-text">
-            こんにちは：{username ? username : "ゲスト"}さん
+          <p className="text-xs">
+            こんにちは：
+            <br />
+            {username ? username : "ゲスト"}さん
           </p>
-          <Link className="mx-3 text-s" href="/top">
+          <Link className="mx-3 text-sm" href="/top">
             TOP
           </Link>
-          <Link className="mx-5 text-s" href="/login">
+          <Link className="mx-5 text-sm" href="/login">
             ログイン
           </Link>
-          <button className="pr-10 text-s" onClick={logout}>
+          <button className="text-sm" onClick={logout}>
             ログアウト
           </button>
           <Sheet>

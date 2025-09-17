@@ -145,9 +145,11 @@
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
   }
 }
 
 @theme {
   --font-dotgothic: "DotGothic16", sans-serif;
 }
+

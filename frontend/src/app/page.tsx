@@ -7,21 +7,24 @@ export default function app() {
       <main className="h-full bg-[#FAF9F8]">
         <div className="pt-20">
           <div className="">
-            <h1 className="font-dotgothic text-3xl text-center">
+            <h1 className="font-dotgothic text-2xl text-center md:text-3xl">
               キャラクターと一緒に成長するアプリ
             </h1>
           </div>
-          <div className="flex justify-center items-center mb-15">
+          <div className="md:flex justify-center flex-wrap items-center mb-15">
             <Image
+              className="mx-auto md:mx-0"
               src="/ai_icon.gif"
               alt="logo"
               width={300}
               height={300}
               unoptimized
             />
-            <p className="font-dotgothic text-2xl text-center ml-10 border-amber-200 bg-amber-200 rounded-3xl inline-block py-4 px-8">
-              Hello!
-            </p>
+            <div className="text-center">
+              <p className="font-dotgothic text-2xl text-center border-amber-200 bg-amber-200 rounded-3xl inline-block py-4 px-8 md:ml-10">
+                Hello!
+              </p>
+            </div>
           </div>
           <div className="flex justify-center">
             <button className="group relative w-35 h-12 overflow-hidden rounded-md bg-blue-500 px-6 text-neutral-50 transition mb-20">
@@ -32,10 +35,7 @@ export default function app() {
             </button>
           </div>
           <div className="flex justify-center mb-30">
-            <div
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 place
-          -items-center"
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 place-items-center">
               <div className="m-10">
                 <p className="text-center heading-text">TOPページ</p>
                 <Image src="/top.png" alt="logo" width={500} height={500} />
