@@ -26,5 +26,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/github-deploy/Pomodoro_Timer
+            cd /home/kohakucd/github-deploy/Pomodoro_Timer
             git pull origin main
