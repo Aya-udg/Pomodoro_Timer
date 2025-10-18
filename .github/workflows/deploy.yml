@@ -1,0 +1,29 @@
+# ワークフロー名
+name: VPS Deploy
+
+# トリガーの設定
+# 例はmainブランチにpushしたとき
+on:
+  push:
+    branches: [main]
+
+# ジョブ内容の指定
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # ランナーのチェックアウト（ファイルをubuntuにコピーする）
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      
+      # SSH接続をする
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/github-deploy/Pomodoro_Timer
