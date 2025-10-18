@@ -27,3 +27,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/github-deploy/Pomodoro_Timer
+            git pull origin main
