@@ -7,16 +7,49 @@ on:
   push:
     branches: [main]
 
+# 環境変数の指定
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: py
+
 # ジョブ内容の指定
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # イメージをプッシュする権限をGITHUB_TOKENに付与する
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     # ランナーのチェックアウト（ファイルをubuntuにコピーする）
       - name: Checkout repository
         uses: actions/checkout@v5
       
+      # ghcrにログインする
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          # PATを指定する
+          password: ${{ secrets.GHCR_TOKEN }}
+
+        # コンテナイメージをビルド・pushする
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v6
+        with:
+         context: ./frontend
+         push: true
+         tags: ${{ env.REGISTRY }}/${{ github.repository }}/pomodoro-frontend:${{ github.ref_name }} 
+
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v6
+        with:
+         context: ./backend
+         push: true
+         tags: ${{ env.REGISTRY }}/${{ github.repository }}/pomodoro-backend:${{ github.ref_name }} 
+
       # SSH接続をする
       - name: Deploy
         uses: appleboy/ssh-action@v1.2.2
