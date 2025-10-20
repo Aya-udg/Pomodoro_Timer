@@ -41,14 +41,14 @@ jobs:
         with:
          context: ./frontend
          push: true
-         tags: ${{ env.REGISTRY }}/${{ github.repository }}/pomodoro-frontend:${{ github.ref_name }} 
+         tags: ghcr.io/aya-udg/pomodoro-frontend:${{ github.ref_name }} 
 
       - name: Build and Push Backend
         uses: docker/build-push-action@v6
         with:
          context: ./backend
          push: true
-         tags: ${{ env.REGISTRY }}/${{ github.repository }}/pomodoro-backend:${{ github.ref_name }} 
+         tags: ghcr.io/aya-udg/pomodoro-backend:${{ github.ref_name }} 
 
       # SSH接続をする
       - name: Deploy
