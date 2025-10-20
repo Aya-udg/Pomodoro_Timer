@@ -61,4 +61,5 @@ jobs:
           script: |
             cd /home/kohakucd/github-deploy/Pomodoro_Timer
             git pull origin main
-            docker compose -f compose.yml up -d --build
+            docker compose -f compose.yml pull
+            docker compose -f compose.yml up -d
