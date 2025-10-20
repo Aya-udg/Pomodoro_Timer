@@ -1,6 +1,6 @@
 services:
     frontend:
-      build: ./frontend
+      image: ghcr.io/aya-udg/pomodoro-frontend:main
       container_name: frontend
       restart: always
       env_file:
@@ -11,7 +11,7 @@ services:
       networks:
         - app-network
     backend:
-      build: ./backend
+      image: ghcr.io/aya-udg/pomodoro-backend:main
       container_name: backend
       restart: always
       env_file:
