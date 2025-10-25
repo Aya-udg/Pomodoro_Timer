@@ -41,6 +41,7 @@ jobs:
         with:
          context: ./frontend
          push: true
+        #  ref_nameにはブランチ名が入る
          tags: ghcr.io/aya-udg/pomodoro-frontend:${{ github.ref_name }} 
 
       - name: Build and Push Backend
@@ -62,4 +63,4 @@ jobs:
             cd /home/kohakucd/github-deploy/Pomodoro_Timer
             git pull origin main
             docker compose -f compose.yml pull
-            docker compose -f compose.yml up -d
+            docker compose -f compose.yml up -d --force-recreate

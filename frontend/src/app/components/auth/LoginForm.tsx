@@ -97,14 +97,23 @@ export default function LoginForm() {
             </CardContent>
             <CardFooter className="flex-col gap-2">
               <Button
+                id="login"
                 type="submit"
                 className="w-full bg-sky-500 hover:bg-sky-600"
               >
                 ログイン
               </Button>
+
               <Link className="w-full text-center" href="/signup">
                 新規会員登録
               </Link>
+              <Button
+                id="gest"
+                type="submit"
+                className="mt-5 w-full bg-emerald-400 hover:bg-emerald-600"
+              >
+                ゲストアカウントでログインする（一部機能のみ）
+              </Button>
             </CardFooter>
           </Card>
         </form>
