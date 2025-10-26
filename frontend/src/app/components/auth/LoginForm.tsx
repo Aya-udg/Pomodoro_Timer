@@ -52,6 +52,32 @@ export default function LoginForm() {
     }
   };
 
+  // ゲストログイン用
+  const onGuestLogin = async () => {
+    const guestData = {
+      username: "guest",
+      password: "guestpass123",
+    };
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      // URLエンコード形式で送る
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(guestData),
+    });
+
+    if (res.ok) {
+      // ログイン成功
+      const result = await res.json();
+      setUsername(result.data.username);
+      toast.success("ログインしました!TOPページに戻ります");
+      setTimeout(() => {
+        router.push("/top");
+      }, 1500);
+    } else {
+      toast.error("認証失敗しました");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-b from-slate-50 from- via-slate-50 via- to-slate-100  min-h-screen">
       <div>
@@ -108,8 +134,8 @@ export default function LoginForm() {
                 新規会員登録
               </Link>
               <Button
-                id="gest"
-                type="submit"
+                type="button"
+                onClick={onGuestLogin}
                 className="mt-5 w-full bg-emerald-400 hover:bg-emerald-600"
               >
                 ゲストアカウントでログインする（一部機能のみ）

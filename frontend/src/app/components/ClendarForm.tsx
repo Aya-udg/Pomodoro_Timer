@@ -80,6 +80,17 @@ export default function ClendarForm({
       setTimeout(() => {
         router.push("/login");
       }, 1500);
+    } else if (username === "guest") {
+      const defaultData = {
+        ...data,
+        timer: 25,
+        completed: false,
+      };
+      // const res = await postSchedule(defaultData);
+      onOpenChange(false); //ダイアログを閉じる
+      reset(); // フォーム初期化
+      await getSchedule();
+      onSuccess("登録しました");
     } else {
       const defaultData = {
         ...data,
