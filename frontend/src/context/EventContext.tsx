@@ -12,12 +12,6 @@ type EventType = {
   description: string;
   timer: number;
   color: string;
-  extendedProps: {
-    timer: number;
-    completed: boolean;
-    description: string;
-    memo?: string;
-  };
 };
 
 // 登録・更新した予定を即座に変更させる用

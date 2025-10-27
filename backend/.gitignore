@@ -46,3 +46,5 @@ __pycache__/
 
 /alembic.ini
 .ruff_cache
+
+/dockerfile.dev

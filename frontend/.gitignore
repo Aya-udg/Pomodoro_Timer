@@ -42,3 +42,5 @@ next-env.d.ts
 
 # 環境変数ファイルをGit管理から除外
 .env.local
+
+/dockerfile.dev

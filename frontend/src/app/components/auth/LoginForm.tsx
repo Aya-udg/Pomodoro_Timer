@@ -58,24 +58,11 @@ export default function LoginForm() {
       username: "guest",
       password: "guestpass123",
     };
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      // URLエンコード形式で送る
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(guestData),
-    });
-
-    if (res.ok) {
-      // ログイン成功
-      const result = await res.json();
-      setUsername(result.data.username);
-      toast.success("ログインしました!TOPページに戻ります");
-      setTimeout(() => {
-        router.push("/top");
-      }, 1500);
-    } else {
-      toast.error("認証失敗しました");
-    }
+    setUsername(guestData.username);
+    toast.success("ログインしました!TOPページに戻ります");
+    setTimeout(() => {
+      router.push("/top");
+    }, 1500);
   };
 
   return (
