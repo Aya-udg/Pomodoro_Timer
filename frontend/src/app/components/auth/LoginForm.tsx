@@ -52,6 +52,19 @@ export default function LoginForm() {
     }
   };
 
+  // ゲストログイン用
+  const onGuestLogin = async () => {
+    const guestData = {
+      username: "guest",
+      password: "guestpass123",
+    };
+    setUsername(guestData.username);
+    toast.success("ログインしました!TOPページに戻ります");
+    setTimeout(() => {
+      router.push("/top");
+    }, 1500);
+  };
+
   return (
     <div className="bg-gradient-to-b from-slate-50 from- via-slate-50 via- to-slate-100  min-h-screen">
       <div>
@@ -97,14 +110,23 @@ export default function LoginForm() {
             </CardContent>
             <CardFooter className="flex-col gap-2">
               <Button
+                id="login"
                 type="submit"
                 className="w-full bg-sky-500 hover:bg-sky-600"
               >
                 ログイン
               </Button>
+
               <Link className="w-full text-center" href="/signup">
                 新規会員登録
               </Link>
+              <Button
+                type="button"
+                onClick={onGuestLogin}
+                className="mt-5 w-full bg-emerald-400 hover:bg-emerald-600"
+              >
+                ゲストアカウントでログインする（一部機能のみ）
+              </Button>
             </CardFooter>
           </Card>
         </form>

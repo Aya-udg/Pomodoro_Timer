@@ -21,6 +21,13 @@ export default function Header() {
   const router = useRouter();
 
   const logout = async () => {
+    if (username === "guest") {
+      toast.success("ログアウトしました!TOPページに戻ります");
+      setUsername("");
+      setTimeout(() => {
+        router.push("/top");
+      }, 1500);
+    }
     const res = await fetch("/api/auth/logout", {
       method: "POST",
     });

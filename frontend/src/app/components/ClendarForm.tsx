@@ -50,6 +50,18 @@ export default function ClendarForm({
       setTimeout(() => {
         router.push("/login");
       }, 1500);
+    } else if (username === "guest") {
+      const updateData: UpdateTodoFormData = {
+        ...data,
+        id: selectedEvent?.id ?? "",
+        description: data.title,
+        timer: 25,
+        completed: false,
+      };
+      onOpenChange(false); //ダイアログを閉じる
+      reset(); // フォーム初期化
+      setEvents((prev) => [...prev, updateData]);
+      onSuccess("更新しました");
     } else {
       const updateData: UpdateTodoFormData = {
         ...data,
@@ -80,6 +92,21 @@ export default function ClendarForm({
       setTimeout(() => {
         router.push("/login");
       }, 1500);
+    } else if (username === "guest") {
+      const guestEvent = {
+        id: String(Math.floor(Math.random() * 10000)),
+        title: data.title,
+        start: data.start,
+        end: data.end,
+        completed: false,
+        description: data.title,
+        timer: 25,
+        color: data.color,
+      };
+      onOpenChange(false); //ダイアログを閉じる
+      reset(); // フォーム初期化
+      setEvents((prev) => [...prev, guestEvent]);
+      onSuccess("登録しました");
     } else {
       const defaultData = {
         ...data,
