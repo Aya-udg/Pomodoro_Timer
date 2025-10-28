@@ -34,6 +34,12 @@ jobs:
           username: ${{ github.actor }}
           # PATを指定する
           password: ${{ secrets.GHCR_TOKEN }}
+      
+      - name: Create .env file
+        run: |
+          echo 'NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}'>.env
+        working-directory: ./frontend
+
 
         # コンテナイメージをビルド・pushする
       - name: Build and Push Frontend
