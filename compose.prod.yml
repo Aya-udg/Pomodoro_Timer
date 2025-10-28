@@ -16,7 +16,6 @@ services:
       restart: always
       env_file:
         - .env
-        - frontend/.env.local
       environment:
         - HOSTNAME=0.0.0.0   # コンテナ外からアクセスできるようにする
         - PORT=8000   
